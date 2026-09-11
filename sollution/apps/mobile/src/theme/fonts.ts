@@ -8,9 +8,13 @@ export const fontFamilies = {
 export const typography = {
   fontFamilies,
   sizes: {
-    caption: 12,
+    overline: 11,
+    caption: 13,
+    label: 15,
     body: 16,
+    heading: 17,
     bodyLarge: 18,
+    headline: 22,
     title: 24,
     display: 32,
   },
@@ -20,7 +24,12 @@ export const typography = {
     bold: '700' as const,
   },
   lineHeights: {
+    overline: 14,
+    caption: 18,
+    label: 20,
     body: 24,
+    heading: 24,
+    headline: 30,
     title: 30,
     display: 38,
   },

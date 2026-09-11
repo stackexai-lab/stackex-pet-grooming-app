@@ -1,0 +1,362 @@
+import { useMemo, useState, type ReactNode } from 'react';
+import {
+  I18nManager,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Switch,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { FlowHeader } from '@/components/FlowHeader';
+import { cardShadow } from '@/components/ServiceCard';
+import { paymentMock } from '@/mocks/payment';
+import { createStyles, useTheme, type Theme } from '@/theme';
+
+export function PaymentScreen() {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
+  const styles = useMemo(() => paymentStyles(theme), [theme]);
+  const [name, setName] = useState(paymentMock.cardholderName);
+  const [number, setNumber] = useState(paymentMock.cardNumber);
+  const [expires, setExpires] = useState(paymentMock.expires);
+  const [cvc, setCvc] = useState(paymentMock.cvc);
+  const [zip, setZip] = useState(paymentMock.postalCode);
+  const [saveCard, setSaveCard] = useState(true);
+  const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
+  const total = t('confirmation.money', { value: paymentMock.total.toFixed(2) });
+
+  return (
+    <View style={styles.screen}>
+      <FlowHeader dashedBack insetTop={insets.top} title={t('confirmation.title')} />
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>{t('payment.cardInformation')}</Text>
+              <View style={styles.brands}>
+                <View style={styles.brand}><Text style={styles.brandLabel}>{t('payment.visa')}</Text></View>
+                <View style={styles.brand}><Text style={styles.brandLabel}>{t('payment.mastercard')}</Text></View>
+                <View style={styles.brand}><Text style={styles.brandLabel}>{t('payment.amex')}</Text></View>
+              </View>
+            </View>
+
+            <Field label={t('payment.cardholderName')}>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  onChangeText={setName}
+                  style={styles.input}
+                  underlineColorAndroid="transparent"
+                  value={name}
+                />
+                <MaterialCommunityIcons color={theme.colors.textMuted} name="card-account-details-outline" size={20} />
+              </View>
+            </Field>
+
+            <Field label={t('payment.cardNumber')}>
+              <View style={styles.inputWrap}>
+                <TextInput
+                  onChangeText={setNumber}
+                  style={styles.input}
+                  underlineColorAndroid="transparent"
+                  value={number}
+                />
+                <MaterialIcons color={theme.colors.primaryContainer} name="credit-card" size={20} />
+              </View>
+            </Field>
+
+            <View style={styles.row}>
+              <Field label={t('payment.expires')} style={styles.half}>
+                <TextInput
+                  onChangeText={setExpires}
+                  style={[styles.input, styles.inputSolo, styles.center]}
+                  underlineColorAndroid="transparent"
+                  value={expires}
+                />
+              </Field>
+              <Field
+                label={t('payment.cvc')}
+                style={styles.half}
+                trailing={(
+                  <MaterialIcons
+                    accessibilityLabel={t('payment.cvcHelp')}
+                    color={theme.colors.textMuted}
+                    name="help-outline"
+                    size={14}
+                  />
+                )}
+              >
+                <View style={styles.inputWrap}>
+                  <TextInput
+                    keyboardType="number-pad"
+                    onChangeText={setCvc}
+                    secureTextEntry
+                    style={[styles.input, styles.center]}
+                    underlineColorAndroid="transparent"
+                    value={cvc}
+                  />
+                  <MaterialIcons color={theme.colors.textMuted} name="lock-outline" size={16} />
+                </View>
+              </Field>
+            </View>
+
+            <Field label={t('payment.billingZip')}>
+              <View style={styles.zipRow}>
+                <Pressable style={styles.country}>
+                  <Text style={styles.countryCode}>{paymentMock.countryCode}</Text>
+                  <Text style={styles.countryLabel}>{paymentMock.countryLabel}</Text>
+                  <MaterialIcons color={theme.colors.textMuted} name="keyboard-arrow-down" size={16} />
+                </Pressable>
+                <TextInput
+                  onChangeText={setZip}
+                  style={[styles.input, styles.inputSolo, styles.zip]}
+                  underlineColorAndroid="transparent"
+                  value={zip}
+                />
+              </View>
+            </Field>
+
+            <View style={styles.saveRow}>
+              <View style={styles.saveCopy}>
+                <Text style={styles.saveTitle}>{t('payment.saveForLater')}</Text>
+                <Text style={styles.saveHint}>{t('payment.saveHint', { pets: paymentMock.pets })}</Text>
+              </View>
+              <Switch
+                ios_backgroundColor={theme.colors.surfaceHigh}
+                onValueChange={setSaveCard}
+                thumbColor={theme.colors.surface}
+                trackColor={{ false: theme.colors.surfaceHigh, true: theme.colors.primaryContainer }}
+                value={saveCard}
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, theme.spacing.lg) }]}>
+        <Pressable
+          onPress={() => router.replace('/success')}
+          style={({ pressed }) => [styles.pay, pressed && styles.pressed]}
+        >
+          <View style={styles.payLead}>
+            <MaterialIcons color={theme.colors.primaryText} name="lock" size={18} />
+            <Text style={styles.payLabel}>{t('payment.confirmAndPay')}</Text>
+          </View>
+          <View style={styles.payLead}>
+            <Text style={styles.payLabel}>{total}</Text>
+            <MaterialIcons color={theme.colors.primaryText} name={forward} size={18} />
+          </View>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+function Field({
+  children,
+  label,
+  style,
+  trailing,
+}: {
+  children: ReactNode;
+  label: string;
+  style?: object;
+  trailing?: ReactNode;
+}) {
+  const { theme } = useTheme();
+  const styles = useMemo(() => paymentStyles(theme), [theme]);
+
+  return (
+    <View style={style}>
+      <View style={styles.labelRow}>
+        <Text style={styles.label}>{label}</Text>
+        {trailing}
+      </View>
+      {children}
+    </View>
+  );
+}
+
+function paymentStyles(theme: Theme) {
+  return createStyles((t) => ({
+    screen: {
+      backgroundColor: t.colors.background,
+      flex: 1,
+    },
+    flex: {
+      flex: 1,
+    },
+    content: {
+      paddingHorizontal: t.spacing.md,
+      paddingTop: t.spacing.sm,
+    },
+    card: {
+      backgroundColor: t.colors.surface,
+      borderColor: t.colors.surfaceVariant,
+      borderRadius: t.radii.hero,
+      borderWidth: 1,
+      gap: 14,
+      padding: t.spacing.gutter,
+      ...cardShadow(t.colors.overlay),
+    },
+    cardHeader: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: t.spacing.xs,
+    },
+    cardTitle: {
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.bodyBold,
+      fontSize: t.typography.sizes.body,
+      lineHeight: t.typography.lineHeights.body,
+    },
+    brands: {
+      flexDirection: 'row',
+      gap: 6,
+    },
+    brand: {
+      backgroundColor: t.colors.badgeSoft,
+      borderRadius: 6,
+      paddingHorizontal: t.spacing.sm,
+      paddingVertical: 2,
+    },
+    brandLabel: {
+      color: t.colors.badgeSoftText,
+      fontFamily: t.typography.fontFamilies.bodyBold,
+      fontSize: 10,
+      letterSpacing: 0.6,
+    },
+    labelRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 6,
+    },
+    label: {
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: t.typography.sizes.caption,
+      lineHeight: t.typography.lineHeights.caption,
+    },
+    inputWrap: {
+      alignItems: 'center',
+      backgroundColor: t.colors.surfaceSecondary,
+      borderRadius: t.radii.input,
+      flexDirection: 'row',
+      paddingEnd: t.spacing.md,
+    },
+    input: {
+      color: t.colors.ink,
+      flex: 1,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: t.typography.sizes.caption,
+      minHeight: 44,
+      paddingHorizontal: 14,
+    },
+    inputSolo: {
+      backgroundColor: t.colors.surfaceSecondary,
+      borderRadius: t.radii.input,
+    },
+    center: {
+      textAlign: 'center',
+    },
+    row: {
+      flexDirection: 'row',
+      gap: 12,
+    },
+    half: {
+      flex: 1,
+    },
+    zipRow: {
+      flexDirection: 'row',
+      gap: 10,
+    },
+    country: {
+      alignItems: 'center',
+      backgroundColor: t.colors.surfaceSecondary,
+      borderRadius: t.radii.input,
+      flexDirection: 'row',
+      gap: 6,
+      minHeight: 44,
+      paddingHorizontal: 10,
+    },
+    countryCode: {
+      color: t.colors.textMuted,
+      fontFamily: t.typography.fontFamilies.bodyBold,
+      fontSize: t.typography.sizes.overline,
+      textTransform: 'uppercase',
+    },
+    countryLabel: {
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.bodyBold,
+      fontSize: t.typography.sizes.caption,
+    },
+    zip: {
+      flex: 1,
+    },
+    saveRow: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingTop: t.spacing.xs,
+    },
+    saveCopy: {
+      flex: 1,
+      minWidth: 0,
+      paddingEnd: t.spacing.sm,
+    },
+    saveTitle: {
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.bodyBold,
+      fontSize: t.typography.sizes.caption,
+      lineHeight: t.typography.lineHeights.caption,
+    },
+    saveHint: {
+      color: t.colors.textMuted,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: t.typography.sizes.overline,
+      lineHeight: t.typography.lineHeights.overline,
+      marginTop: 2,
+    },
+    footer: {
+      paddingHorizontal: t.spacing.md,
+      paddingTop: t.spacing.sm,
+    },
+    pay: {
+      alignItems: 'center',
+      backgroundColor: t.colors.primaryContainer,
+      borderRadius: t.radii.button,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: t.spacing.gutter,
+      paddingVertical: 14,
+    },
+    payLead: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: t.spacing.sm,
+    },
+    payLabel: {
+      color: t.colors.primaryText,
+      fontFamily: t.typography.fontFamilies.bodyBold,
+      fontSize: t.typography.sizes.caption,
+      lineHeight: t.typography.lineHeights.caption,
+    },
+    pressed: {
+      opacity: 0.94,
+    },
+  }), theme);
+}

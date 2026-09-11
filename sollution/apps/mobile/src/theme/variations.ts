@@ -18,6 +18,7 @@ export type Theme = {
     button: number;
     input: number;
     pill: number;
+    hero: number;
   };
 };
 
@@ -26,10 +27,11 @@ const premium = {
     sage: sageColors,
   },
   radii: {
-    card: 16,
-    button: 12,
-    input: 10,
+    card: 24,
+    button: 999,
+    input: 16,
     pill: 999,
+    hero: 32,
   },
 };
 

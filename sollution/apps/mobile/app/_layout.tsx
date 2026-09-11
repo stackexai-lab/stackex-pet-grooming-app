@@ -1,11 +1,13 @@
 import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 import { AppProvider } from '@/AppProvider';
 
 export default function RootLayout() {
   return (
     <AppProvider>
-      <Stack />
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false }} />
     </AppProvider>
   );
 }
