@@ -4,7 +4,6 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
 import type { Pet } from '@/mocks/pets';
-import { cardShadow } from '@/components/ServiceCard';
 import { createStyles, useTheme, type Theme } from '@/theme';
 
 const sizeKeys = {
@@ -17,9 +16,10 @@ type PetSelectCardProps = {
   pet: Pet;
   selected: boolean;
   onPress: () => void;
+  onRemove: () => void;
 };
 
-export function PetSelectCard({ pet, selected, onPress }: PetSelectCardProps) {
+export function PetSelectCard({ pet, selected, onPress, onRemove }: PetSelectCardProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useMemo(() => petCardStyles(theme), [theme]);
@@ -41,11 +41,10 @@ export function PetSelectCard({ pet, selected, onPress }: PetSelectCardProps) {
       onPress={onPress}
       style={({ pressed }) => [styles.card, selected && styles.cardSelected, pressed && styles.pressed]}
     >
-      <View style={[styles.accent, selected && styles.accentOn]} />
       {pet.photo ? (
-        <Image source={pet.photo} style={[styles.photo, selected && styles.photoSelected]} resizeMode="cover" />
+        <Image source={pet.photo} style={styles.photo} resizeMode="cover" />
       ) : (
-        <View style={[styles.photo, styles.photoFallback, selected && styles.photoSelected]}>
+        <View style={[styles.photo, styles.photoFallback]}>
           <MaterialIcons color={theme.colors.primary} name="pets" size={28} />
         </View>
       )}
@@ -83,6 +82,15 @@ export function PetSelectCard({ pet, selected, onPress }: PetSelectCardProps) {
           size={18}
         />
       </View>
+      <Pressable
+        accessibilityLabel={t('selectPet.remove')}
+        accessibilityRole="button"
+        hitSlop={8}
+        onPress={onRemove}
+        style={({ pressed }) => [styles.remove, pressed && styles.pressed]}
+      >
+        <MaterialIcons color={theme.colors.textMuted} name="close" size={16} />
+      </Pressable>
     </Pressable>
   );
 }
@@ -92,36 +100,30 @@ function petCardStyles(theme: Theme) {
     card: {
       alignItems: 'center',
       backgroundColor: t.colors.surface,
+      borderColor: t.colors.surfaceContainer,
       borderRadius: t.radii.card,
+      borderWidth: 1,
+      elevation: 0,
       flexDirection: 'row',
-      overflow: 'hidden',
       padding: t.spacing.md,
-      paddingStart: t.spacing.md + t.spacing.xs,
-      ...cardShadow(t.colors.overlay),
     },
-    cardSelected: {},
+    cardSelected: {
+      borderColor: t.colors.primaryContainer,
+      borderWidth: 2,
+      elevation: 6,
+      padding: t.spacing.md - 1,
+      shadowColor: t.colors.overlay,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.16,
+      shadowRadius: 12,
+    },
     pressed: {
       opacity: 0.92,
-    },
-    accent: {
-      backgroundColor: 'transparent',
-      bottom: 0,
-      position: 'absolute',
-      start: 0,
-      top: 0,
-      width: t.spacing.track,
-    },
-    accentOn: {
-      backgroundColor: t.colors.primaryContainer,
     },
     photo: {
       borderRadius: t.radii.pill,
       height: t.spacing.portrait,
       width: t.spacing.portrait,
-    },
-    photoSelected: {
-      borderColor: `${t.colors.primaryContainer}33`,
-      borderWidth: 2,
     },
     photoFallback: {
       alignItems: 'center',
@@ -188,6 +190,17 @@ function petCardStyles(theme: Theme) {
     },
     noteOn: {
       color: t.colors.secondary,
+    },
+    remove: {
+      alignItems: 'center',
+      backgroundColor: t.colors.surface,
+      borderRadius: t.radii.pill,
+      end: 6,
+      height: 24,
+      justifyContent: 'center',
+      position: 'absolute',
+      top: 6,
+      width: 24,
     },
     check: {
       alignItems: 'center',

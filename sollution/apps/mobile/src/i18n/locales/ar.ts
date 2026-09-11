@@ -68,6 +68,9 @@ const ar: Localized<typeof en> = {
     rangeLarge: '56+ رطل',
     saveAndSelect: 'حفظ واختيار',
     close: 'إغلاق',
+    remove: 'إزالة الحيوان',
+    removeConfirm: 'إزالة {{name}} من حيواناتك؟',
+    empty: 'لا توجد حيوانات بعد. أضف واحداً للمتابعة.',
   },
   selectService: {
     title: 'اختر الخدمة',

@@ -17,7 +17,6 @@ export type NewPetDraft = {
 type AddPetFormProps = {
   draft: NewPetDraft;
   onChange: (draft: NewPetDraft) => void;
-  onSave: () => void;
   onClose: () => void;
 };
 
@@ -33,12 +32,11 @@ const sizeRangeKeys = {
   large: 'selectPet.rangeLarge',
 } as const;
 
-export function AddPetForm({ draft, onChange, onSave, onClose }: AddPetFormProps) {
+export function AddPetForm({ draft, onChange, onClose }: AddPetFormProps) {
   const { t } = useTranslation();
   const { isRTL } = useLanguage();
   const { theme } = useTheme();
   const styles = useMemo(() => addPetStyles(theme), [theme]);
-  const canSave = draft.name.trim().length > 0;
 
   return (
     <View style={styles.card}>
@@ -86,14 +84,16 @@ export function AddPetForm({ draft, onChange, onSave, onClose }: AddPetFormProps
       </View>
 
       <Text style={[styles.label, isRTL && styles.labelRtl]}>{t('selectPet.breed')}</Text>
-      <TextInput
-        onChangeText={(breed) => onChange({ ...draft, breed })}
-        placeholder={t('selectPet.breedPlaceholder')}
-        placeholderTextColor={theme.colors.border}
-        style={[styles.input, styles.inputSolo]}
-        underlineColorAndroid="transparent"
-        value={draft.breed}
-      />
+      <View style={styles.field}>
+        <TextInput
+          onChangeText={(breed) => onChange({ ...draft, breed })}
+          placeholder={t('selectPet.breedPlaceholder')}
+          placeholderTextColor={theme.colors.border}
+          style={styles.input}
+          underlineColorAndroid="transparent"
+          value={draft.breed}
+        />
+      </View>
 
       <Text style={[styles.label, isRTL && styles.labelRtl]}>{t('selectPet.weightClass')}</Text>
       <View style={styles.sizeRow}>
@@ -114,23 +114,6 @@ export function AddPetForm({ draft, onChange, onSave, onClose }: AddPetFormProps
             </Pressable>
           );
         })}
-      </View>
-
-      <View style={styles.actions}>
-        <Pressable
-          disabled={!canSave}
-          onPress={onSave}
-          style={({ pressed }) => [styles.save, !canSave && styles.saveDisabled, pressed && canSave && styles.pressed]}
-        >
-          <MaterialIcons color={theme.colors.primaryText} name="done" size={20} />
-          <Text style={styles.saveLabel}>{t('selectPet.saveAndSelect')}</Text>
-        </Pressable>
-        <Pressable
-          onPress={onClose}
-          style={({ pressed }) => [styles.cancel, pressed && styles.pressed]}
-        >
-          <Text style={styles.cancelLabel}>{t('cancel')}</Text>
-        </Pressable>
       </View>
     </View>
   );
@@ -169,8 +152,8 @@ function addPetStyles(theme: Theme) {
   return createStyles((t) => ({
     card: {
       backgroundColor: t.colors.surface,
-      borderRadius: t.radii.card,
-      padding: t.spacing.gutter,
+      paddingHorizontal: t.spacing.gutter,
+      paddingBottom: t.spacing.sm,
     },
     header: {
       alignItems: 'center',
@@ -259,17 +242,12 @@ function addPetStyles(theme: Theme) {
       fontFamily: t.typography.fontFamilies.body,
       fontSize: t.typography.sizes.label,
       height: t.spacing.control,
-    },
-    inputSolo: {
-      backgroundColor: t.colors.surfaceSecondary,
-      borderRadius: t.radii.input,
-      marginBottom: t.spacing.md,
-      paddingHorizontal: t.spacing.md,
+      paddingVertical: 0,
     },
     sizeRow: {
       flexDirection: 'row',
       gap: t.spacing.xs,
-      marginBottom: t.spacing.lg,
+      marginBottom: t.spacing.sm,
     },
     sizeChip: {
       alignItems: 'center',
@@ -298,43 +276,6 @@ function addPetStyles(theme: Theme) {
       lineHeight: t.typography.lineHeights.overline,
       marginTop: 2,
       opacity: 0.85,
-    },
-    actions: {
-      flexDirection: 'row',
-      gap: t.spacing.sm,
-    },
-    save: {
-      alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
-      borderRadius: t.radii.button,
-      flex: 1,
-      flexDirection: 'row',
-      gap: t.spacing.xs,
-      height: 48,
-      justifyContent: 'center',
-    },
-    saveDisabled: {
-      opacity: 0.5,
-    },
-    saveLabel: {
-      color: t.colors.primaryText,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.label,
-      lineHeight: t.typography.lineHeights.label,
-    },
-    cancel: {
-      alignItems: 'center',
-      backgroundColor: t.colors.surfaceHigh,
-      borderRadius: t.radii.button,
-      height: 48,
-      justifyContent: 'center',
-      paddingHorizontal: t.spacing.md,
-    },
-    cancelLabel: {
-      color: t.colors.textSecondary,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.caption,
-      lineHeight: t.typography.lineHeights.caption,
     },
     pressed: {
       opacity: 0.88,
