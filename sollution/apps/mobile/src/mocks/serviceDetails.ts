@@ -28,7 +28,16 @@ export const serviceAddons: ServiceAddon[] = [
   },
 ];
 
-export function serviceDetailCopy(service: GroomingService) {
+export function serviceDetailCopy(service: GroomingService, browse = false) {
+  if (browse) {
+    return {
+      titleKey: service.titleKey,
+      blurbKey: service.descriptionKey,
+      price: service.price,
+      badgeKey: 'serviceDetails.spaSignature' as const,
+    };
+  }
+
   if (service.id === 'fullGroom') {
     return {
       titleKey: 'history.fullGroomSpa' as const,

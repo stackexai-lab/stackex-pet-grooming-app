@@ -8,9 +8,10 @@ import { createStyles, useTheme, type Theme } from '@/theme';
 
 type ServiceCardProps = {
   service: PopularService;
+  onPress?: () => void;
 };
 
-export function ServiceCard({ service }: ServiceCardProps) {
+export function ServiceCard({ service, onPress }: ServiceCardProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useMemo(() => serviceCardStyles(theme), [theme]);
@@ -21,6 +22,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
   return (
     <Pressable
       accessibilityRole="button"
+      onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
       <View style={[styles.iconWrap, iconBg]}>

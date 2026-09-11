@@ -17,12 +17,13 @@ export function ServiceDetailsScreen() {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const styles = useMemo(() => detailsStyles(theme), [theme]);
-  const params = useLocalSearchParams<{ serviceId?: string | string[] }>();
+  const params = useLocalSearchParams<{ serviceId?: string | string[]; browse?: string | string[] }>();
   const serviceId = Array.isArray(params.serviceId) ? params.serviceId[0] : params.serviceId;
+  const browse = (Array.isArray(params.browse) ? params.browse[0] : params.browse) === '1';
   const service = groomingServices.find((item) => item.id === serviceId)
     ?? groomingServices.find((item) => item.id === 'fullGroom')
     ?? groomingServices[0];
-  const copy = serviceDetailCopy(service);
+  const copy = serviceDetailCopy(service, browse);
   const [addonIds, setAddonIds] = useState<string[]>([]);
   const addonTotal = serviceAddons
     .filter((addon) => addonIds.includes(addon.id))
@@ -52,17 +53,24 @@ export function ServiceDetailsScreen() {
             <Text style={styles.badgeLabel}>{t(copy.badgeKey)}</Text>
           </View>
         </View>
-        <Text style={styles.name}>{t(copy.titleKey)}</Text>
+        <View style={styles.heading}>
+          <Text style={styles.name}>{t(copy.titleKey)}</Text>
+          {browse ? (
+            <Text style={styles.listedPrice}>{t('home.price', { value: copy.price })}</Text>
+          ) : null}
+        </View>
         <Text style={styles.blurb}>{t(copy.blurbKey)}</Text>
         <View style={styles.chips}>
           <View style={styles.chip}>
             <MaterialIcons color={theme.colors.secondary} name="schedule" size={16} />
             <Text style={styles.chipLabel}>{t('selectService.duration', { minutes: service.minutes })}</Text>
           </View>
-          <View style={[styles.chip, styles.chipPrice]}>
-            <MaterialIcons color={theme.colors.onSecondaryContainer} name="payments" size={16} />
-            <Text style={styles.chipPriceLabel}>{t('serviceDetails.fromPrice', { value: copy.price })}</Text>
-          </View>
+          {browse ? null : (
+            <View style={[styles.chip, styles.chipPrice]}>
+              <MaterialIcons color={theme.colors.onSecondaryContainer} name="payments" size={16} />
+              <Text style={styles.chipPriceLabel}>{t('serviceDetails.fromPrice', { value: copy.price })}</Text>
+            </View>
+          )}
           <View style={styles.chip}>
             <MaterialIcons color={theme.colors.primary} name="pets" size={16} />
             <Text style={styles.chipLabel}>{t('serviceDetails.allBreeds')}</Text>
@@ -106,26 +114,45 @@ export function ServiceDetailsScreen() {
           })}
         </View>
       </ScrollView>
-      <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, theme.spacing.md) }]}>
-        <View>
-          <Text style={styles.totalKicker}>{t('serviceDetails.totalEst')}</Text>
-          <Text style={styles.total}>{t('home.price', { value: total })}</Text>
+      {browse ? (
+        <View style={[styles.browseFooter, { paddingBottom: Math.max(insets.bottom, theme.spacing.md) }]}>
+          <View style={styles.browsePriceRow}>
+            <Text style={styles.totalKicker}>
+              {t(addonTotal === 0 ? 'serviceDetails.startingAt' : 'serviceDetails.totalEst')}
+            </Text>
+            <Text style={styles.total}>{t('home.price', { value: total })}</Text>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/select-pet')}
+            style={({ pressed }) => [styles.browseBook, pressed && styles.selectPressed]}
+          >
+            <MaterialIcons color={theme.colors.primaryText} name="event" size={20} />
+            <Text style={styles.selectLabel}>{t('home.bookGrooming')}</Text>
+          </Pressable>
         </View>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => router.push({
-            pathname: '/schedule',
-            params: {
-              serviceId: service.id,
-              addons: addonIds.join(','),
-            },
-          })}
-          style={({ pressed }) => [styles.select, pressed && styles.selectPressed]}
-        >
-          <Text style={styles.selectLabel}>{t('serviceDetails.selectService')}</Text>
-          <MaterialIcons color={theme.colors.primaryText} name={forward} size={20} />
-        </Pressable>
-      </View>
+      ) : (
+        <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, theme.spacing.md) }]}>
+          <View>
+            <Text style={styles.totalKicker}>{t('serviceDetails.totalEst')}</Text>
+            <Text style={styles.total}>{t('home.price', { value: total })}</Text>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push({
+              pathname: '/schedule',
+              params: {
+                serviceId: service.id,
+                addons: addonIds.join(','),
+              },
+            })}
+            style={({ pressed }) => [styles.select, pressed && styles.selectPressed]}
+          >
+            <Text style={styles.selectLabel}>{t('serviceDetails.selectService')}</Text>
+            <MaterialIcons color={theme.colors.primaryText} name={forward} size={20} />
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }
@@ -178,12 +205,25 @@ function detailsStyles(theme: Theme) {
       fontSize: t.typography.sizes.overline,
       lineHeight: t.typography.lineHeights.overline,
     },
+    heading: {
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      gap: t.spacing.md,
+      justifyContent: 'space-between',
+      marginTop: t.spacing.sm,
+    },
     name: {
       color: t.colors.ink,
+      flex: 1,
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: t.typography.sizes.headline,
       lineHeight: t.typography.lineHeights.headline,
-      marginTop: t.spacing.sm,
+    },
+    listedPrice: {
+      color: t.colors.primary,
+      fontFamily: t.typography.fontFamilies.display,
+      fontSize: t.typography.sizes.headline,
+      lineHeight: t.typography.lineHeights.headline,
     },
     blurb: {
       color: t.colors.textSecondary,
@@ -302,6 +342,29 @@ function detailsStyles(theme: Theme) {
       gap: t.spacing.md,
       paddingHorizontal: t.spacing.gutter,
       paddingTop: t.spacing.sm,
+    },
+    browseFooter: {
+      backgroundColor: t.colors.surface,
+      borderTopColor: t.colors.surfaceContainer,
+      borderTopWidth: 1,
+      gap: t.spacing.md,
+      paddingHorizontal: t.spacing.gutter,
+      paddingTop: t.spacing.md,
+      ...cardShadow(t.colors.overlay),
+    },
+    browsePriceRow: {
+      alignItems: 'baseline',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    browseBook: {
+      alignItems: 'center',
+      backgroundColor: t.colors.primaryContainer,
+      borderRadius: t.radii.button,
+      flexDirection: 'row',
+      gap: t.spacing.sm,
+      height: t.spacing.control,
+      justifyContent: 'center',
     },
     totalKicker: {
       color: t.colors.textSecondary,

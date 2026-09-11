@@ -13,8 +13,13 @@ export type PopularService = {
 
 export const homeImages = {
   logo: require('../../assets/images/pawcare-logo.png') as ImageSourcePropType,
-  hero: require('../../assets/images/golden-retriever.jpg') as ImageSourcePropType,
   pet: require('../../assets/images/golden-retriever.jpg') as ImageSourcePropType,
+  heroes: [
+    require('../../assets/images/golden-retriever.jpg') as ImageSourcePropType,
+    require('../../assets/images/french-bulldog.jpg') as ImageSourcePropType,
+    require('../../assets/images/service-full-groom.jpg') as ImageSourcePropType,
+    require('../../assets/images/service-premium.jpg') as ImageSourcePropType,
+  ],
 };
 
 export const homeMock = {

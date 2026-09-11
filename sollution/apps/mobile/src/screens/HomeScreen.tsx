@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { I18nManager, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, Easing, I18nManager, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -20,7 +20,44 @@ export function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const styles = useMemo(() => homeStyles(theme), [theme]);
-  const [saved, setSaved] = useState(false);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [baseIndex, setBaseIndex] = useState(0);
+  const [incomingIndex, setIncomingIndex] = useState(0);
+  const heroes = homeImages.heroes;
+  const heroIndexRef = useRef(0);
+  const fade = useRef(new Animated.Value(0)).current;
+  const zoom = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const tick = setInterval(() => {
+      const next = (heroIndexRef.current + 1) % heroes.length;
+      setIncomingIndex(next);
+      setHeroIndex(next);
+      fade.setValue(0);
+      zoom.setValue(1.08);
+      Animated.parallel([
+        Animated.timing(fade, {
+          toValue: 1,
+          duration: 700,
+          easing: Easing.inOut(Easing.cubic),
+          useNativeDriver: true,
+        }),
+        Animated.timing(zoom, {
+          toValue: 1,
+          duration: 900,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start(({ finished }) => {
+        if (!finished) return;
+        heroIndexRef.current = next;
+        setBaseIndex(next);
+        requestAnimationFrame(() => fade.setValue(0));
+      });
+    }, 2000);
+
+    return () => clearInterval(tick);
+  }, [fade, heroes.length, zoom]);
 
   const greetingKey = greetingTranslationKey();
   const dateLabel = formatHomeDate(homeMock.date, locale);
@@ -53,7 +90,12 @@ export function HomeScreen() {
 
         <View style={styles.hero}>
           <View style={styles.heroMedia}>
-            <Image source={homeImages.hero} style={styles.heroImage} resizeMode="cover" />
+            <Image source={heroes[baseIndex]} style={styles.heroImage} resizeMode="cover" />
+            <Animated.Image
+              source={heroes[incomingIndex]}
+              style={[styles.heroImage, styles.heroIncoming, { opacity: fade, transform: [{ scale: zoom }] }]}
+              resizeMode="cover"
+            />
             <LinearGradient
               colors={['transparent', theme.colors.overlay]}
               locations={[0.35, 1]}
@@ -66,6 +108,14 @@ export function HomeScreen() {
             <View style={styles.heroCopy}>
               <Text style={styles.heroTitle}>{t('home.heroTitle')}</Text>
               <Text numberOfLines={1} style={styles.heroSubtitle}>{t('home.heroSubtitle')}</Text>
+              <View style={styles.heroDots}>
+                {heroes.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[styles.heroDot, index === heroIndex && styles.heroDotOn]}
+                  />
+                ))}
+              </View>
             </View>
           </View>
           <View style={styles.heroActions}>
@@ -77,32 +127,34 @@ export function HomeScreen() {
               <MaterialIcons color={theme.colors.primaryText} name="event" size={20} />
               <Text style={styles.bookLabel}>{t('home.bookGrooming')}</Text>
             </Pressable>
-            <Pressable
-              accessibilityLabel={t('home.favorite')}
-              accessibilityRole="button"
-              onPress={() => setSaved((value) => !value)}
-              style={({ pressed }) => [styles.favorite, pressed && styles.pressed]}
-            >
-              <MaterialIcons
-                color={saved ? theme.colors.primary : theme.colors.textSecondary}
-                name={saved ? 'favorite' : 'favorite-border'}
-                size={22}
-              />
-            </Pressable>
+            
+             
+            
           </View>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>{t('home.popularServices')}</Text>
-            <Pressable accessibilityRole="button" style={styles.viewMenu}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => router.push({ pathname: '/select-service', params: { browse: '1' } })}
+              style={styles.viewMenu}
+            >
               <Text style={styles.viewMenuLabel}>{t('home.viewMenu')}</Text>
               <MaterialIcons color={theme.colors.primary} name={chevron} size={16} />
             </Pressable>
           </View>
           <View style={styles.serviceGrid}>
             {homeMock.services.map((service) => (
-              <ServiceCard key={service.id} service={service} />
+              <ServiceCard
+                key={service.id}
+                onPress={() => router.push({
+                  pathname: '/service-details',
+                  params: { serviceId: service.id, browse: '1' },
+                })}
+                service={service}
+              />
             ))}
           </View>
         </View>
@@ -117,6 +169,7 @@ export function HomeScreen() {
           </View>
           <Pressable
             accessibilityRole="button"
+            onPress={() => router.push('/booking-history')}
             style={({ pressed }) => [styles.appointment, pressed && styles.pressed]}
           >
             <View style={styles.appointmentPet}>
@@ -229,11 +282,15 @@ function homeStyles(theme: Theme) {
     },
     heroMedia: {
       aspectRatio: 4 / 3,
+      overflow: 'hidden',
       width: '100%',
     },
     heroImage: {
       height: '100%',
       width: '100%',
+    },
+    heroIncoming: {
+      ...absoluteFill,
     },
     heroScrim: {
       ...absoluteFill,
@@ -280,6 +337,24 @@ function homeStyles(theme: Theme) {
       fontFamily: t.typography.fontFamilies.body,
       fontSize: t.typography.sizes.caption,
       lineHeight: t.typography.lineHeights.caption,
+    },
+    heroDots: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      gap: 6,
+      marginTop: t.spacing.sm,
+    },
+    heroDot: {
+      backgroundColor: t.colors.onOverlay,
+      borderRadius: t.radii.pill,
+      height: 6,
+      opacity: 0.45,
+      width: 6,
+    },
+    heroDotOn: {
+      backgroundColor: t.colors.surface,
+      opacity: 1,
+      width: 16,
     },
     heroActions: {
       alignItems: 'center',

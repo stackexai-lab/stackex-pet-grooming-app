@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { I18nManager, Pressable, ScrollView, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,20 +17,31 @@ export function SelectServiceScreen() {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const styles = useMemo(() => selectServiceStyles(theme), [theme]);
+  const params = useLocalSearchParams<{ browse?: string | string[] }>();
+  const browse = isBrowseParam(params.browse);
   const [selectedId, setSelectedId] = useState(groomingServices[0].id);
   const selected = groomingServices.find((service) => service.id === selectedId) ?? groomingServices[0];
   const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
+
+  function openDetails(serviceId: string) {
+    router.push({
+      pathname: '/service-details',
+      params: browse ? { serviceId, browse: '1' } : { serviceId },
+    });
+  }
 
   return (
     <View style={styles.screen}>
       <FlowHeader insetTop={insets.top} title={t('selectService.title')} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <BookingProgress
-          aside={t('selectService.nextPetDetails')}
-          current={2}
-          total={4}
-          variant="plain"
-        />
+        {browse ? null : (
+          <BookingProgress
+            aside={t('selectService.nextPetDetails')}
+            current={2}
+            total={4}
+            variant="plain"
+          />
+        )}
         <View style={styles.intro}>
           <Text style={styles.headline}>{t('selectService.headline')}</Text>
           <Text style={styles.subtitle}>{t('selectService.subtitle')}</Text>
@@ -41,7 +52,7 @@ export function SelectServiceScreen() {
               key={service.id}
               onPress={() => {
                 setSelectedId(service.id);
-                router.push({ pathname: '/service-details', params: { serviceId: service.id } });
+                openDetails(service.id);
               }}
               selected={service.id === selectedId}
               service={service}
@@ -58,6 +69,7 @@ export function SelectServiceScreen() {
           </View>
         </View>
       </ScrollView>
+      {browse ? null : (
       <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, theme.spacing.md) }]}>
         <View style={styles.summary}>
           <View style={styles.summaryName}>
@@ -82,8 +94,14 @@ export function SelectServiceScreen() {
           <MaterialIcons color={theme.colors.primaryText} name={forward} size={20} />
         </Pressable>
       </View>
+      )}
     </View>
   );
+}
+
+function isBrowseParam(value?: string | string[]) {
+  const flag = Array.isArray(value) ? value[0] : value;
+  return flag === '1';
 }
 
 function selectServiceStyles(theme: Theme) {
