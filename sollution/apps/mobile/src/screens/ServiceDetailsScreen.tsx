@@ -1,10 +1,23 @@
-import { useMemo, useState } from 'react';
-import { I18nManager, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  I18nManager,
+  Image,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BookingProgress } from '@/components/BookingProgress';
 import { CenterHeader } from '@/components/CenterHeader';
 import { cardShadow } from '@/components/ServiceCard';
 import { serviceAddons, serviceDetailCopy } from '@/mocks/serviceDetails';
@@ -25,16 +38,74 @@ export function ServiceDetailsScreen() {
     ?? groomingServices[0];
   const copy = serviceDetailCopy(service, browse);
   const [addonIds, setAddonIds] = useState<string[]>([]);
+  const [nextOpen, setNextOpen] = useState(false);
+  const dim = useRef(new Animated.Value(0)).current;
+  const slide = useRef(new Animated.Value(1)).current;
+  const closing = useRef(false);
+  const nativeDriver = Platform.OS !== 'web';
   const addonTotal = serviceAddons
     .filter((addon) => addonIds.includes(addon.id))
     .reduce((sum, addon) => sum + addon.price, 0);
   const total = copy.price + addonTotal;
   const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
+  const bookingParams = {
+    serviceId: service.id,
+    addons: addonIds.join(','),
+  };
+
+  useEffect(() => {
+    if (!nextOpen) return;
+    closing.current = false;
+    Animated.parallel([
+      Animated.timing(dim, {
+        toValue: 1,
+        duration: 200,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: nativeDriver,
+      }),
+      Animated.timing(slide, {
+        toValue: 0,
+        duration: 280,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: nativeDriver,
+      }),
+    ]).start();
+  }, [dim, nativeDriver, nextOpen, slide]);
 
   function toggleAddon(id: string) {
     setAddonIds((current) => (
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
     ));
+  }
+
+  function openNextStep() {
+    dim.setValue(0);
+    slide.setValue(1);
+    setNextOpen(true);
+  }
+
+  function closeNextStep(after?: () => void) {
+    if (!nextOpen || closing.current) return;
+    closing.current = true;
+    Animated.parallel([
+      Animated.timing(dim, {
+        toValue: 0,
+        duration: 160,
+        easing: Easing.in(Easing.quad),
+        useNativeDriver: nativeDriver,
+      }),
+      Animated.timing(slide, {
+        toValue: 1,
+        duration: 220,
+        easing: Easing.in(Easing.cubic),
+        useNativeDriver: nativeDriver,
+      }),
+    ]).start(({ finished }) => {
+      if (!finished) return;
+      setNextOpen(false);
+      closing.current = false;
+      after?.();
+    });
   }
 
   return (
@@ -46,6 +117,9 @@ export function ServiceDetailsScreen() {
         title={t('serviceDetails.title')}
       />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {browse ? null : (
+          <BookingProgress aside={t('booking.nextSchedule')} current={2} total={4} />
+        )}
         <View style={styles.hero}>
           <Image source={service.photo} style={styles.heroPhoto} resizeMode="cover" />
           <View style={styles.badge}>
@@ -131,7 +205,7 @@ export function ServiceDetailsScreen() {
             <Text style={styles.selectLabel}>{t('home.bookGrooming')}</Text>
           </Pressable>
         </View>
-      ) : (
+      ) : nextOpen ? null : (
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, theme.spacing.md) }]}>
           <View>
             <Text style={styles.totalKicker}>{t('serviceDetails.totalEst')}</Text>
@@ -139,13 +213,7 @@ export function ServiceDetailsScreen() {
           </View>
           <Pressable
             accessibilityRole="button"
-            onPress={() => router.push({
-              pathname: '/schedule',
-              params: {
-                serviceId: service.id,
-                addons: addonIds.join(','),
-              },
-            })}
+            onPress={openNextStep}
             style={({ pressed }) => [styles.select, pressed && styles.selectPressed]}
           >
             <Text style={styles.selectLabel}>{t('serviceDetails.selectService')}</Text>
@@ -153,6 +221,63 @@ export function ServiceDetailsScreen() {
           </Pressable>
         </View>
       )}
+      <Modal
+        animationType="none"
+        onRequestClose={() => closeNextStep()}
+        presentationStyle="overFullScreen"
+        statusBarTranslucent
+        transparent
+        visible={nextOpen}
+      >
+        <View pointerEvents="box-none" style={styles.modalRoot}>
+          <Animated.View
+            style={[
+              styles.backdrop,
+              { opacity: dim.interpolate({ inputRange: [0, 1], outputRange: [0, 0.45] }) },
+            ]}
+          >
+            <Pressable onPress={() => closeNextStep()} style={styles.backdropHit} />
+          </Animated.View>
+          <Animated.View
+            pointerEvents="box-none"
+            style={[
+              styles.sheetDock,
+              {
+                paddingBottom: Math.max(insets.bottom, theme.spacing.md),
+                transform: [{
+                  translateY: slide.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 280],
+                  }),
+                }],
+              },
+            ]}
+          >
+            <View style={styles.sheet}>
+              <View style={styles.handle} />
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => closeNextStep(() => router.push('/select-pet'))}
+                style={({ pressed }) => [styles.sheetSecondary, pressed && styles.pressed]}
+              >
+                <MaterialIcons color={theme.colors.primary} name="add" size={20} />
+                <Text style={styles.sheetSecondaryLabel}>{t('serviceDetails.addAnotherPet')}</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => closeNextStep(() => router.push({
+                  pathname: '/schedule',
+                  params: bookingParams,
+                }))}
+                style={({ pressed }) => [styles.sheetPrimary, pressed && styles.pressed]}
+              >
+                <Text style={styles.sheetPrimaryLabel}>{t('serviceDetails.continueToSchedule')}</Text>
+                <MaterialIcons color={theme.colors.primaryText} name={forward} size={20} />
+              </Pressable>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -396,6 +521,81 @@ function detailsStyles(theme: Theme) {
     },
     selectLabel: {
       color: t.colors.primaryText,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: t.typography.sizes.label,
+      lineHeight: t.typography.lineHeights.label,
+    },
+    modalRoot: {
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: 'flex-end',
+    },
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: t.colors.overlay,
+    },
+    backdropHit: {
+      flex: 1,
+    },
+    sheetDock: {
+      bottom: 0,
+      left: 0,
+      paddingHorizontal: t.spacing.gutter,
+      position: 'absolute',
+      right: 0,
+    },
+    sheet: {
+      alignSelf: 'center',
+      backgroundColor: t.colors.surface,
+      borderRadius: t.radii.hero,
+      elevation: 16,
+      gap: t.spacing.sm,
+      maxWidth: 420,
+      paddingBottom: t.spacing.md,
+      paddingHorizontal: t.spacing.md,
+      paddingTop: t.spacing.sm,
+      shadowColor: t.colors.overlay,
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.22,
+      shadowRadius: 24,
+      width: '100%',
+    },
+    handle: {
+      alignSelf: 'center',
+      backgroundColor: t.colors.surfaceHigh,
+      borderRadius: t.radii.pill,
+      height: 4,
+      marginBottom: t.spacing.xs,
+      width: 40,
+    },
+    sheetPrimary: {
+      alignItems: 'center',
+      backgroundColor: t.colors.primaryContainer,
+      borderRadius: t.radii.button,
+      flexDirection: 'row',
+      gap: t.spacing.sm,
+      height: t.spacing.control,
+      justifyContent: 'center',
+    },
+    sheetPrimaryLabel: {
+      color: t.colors.primaryText,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: t.typography.sizes.label,
+      lineHeight: t.typography.lineHeights.label,
+    },
+    sheetSecondary: {
+      alignItems: 'center',
+      backgroundColor: 'transparent',
+      borderColor: t.colors.primaryBorder,
+      borderRadius: t.radii.button,
+      borderStyle: 'dashed',
+      borderWidth: 1.5,
+      flexDirection: 'row',
+      gap: t.spacing.sm,
+      height: 48,
+      justifyContent: 'center',
+    },
+    sheetSecondaryLabel: {
+      color: t.colors.primary,
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: t.typography.sizes.label,
       lineHeight: t.typography.lineHeights.label,

@@ -36,10 +36,9 @@ export function SelectServiceScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {browse ? null : (
           <BookingProgress
-            aside={t('selectService.nextPetDetails')}
+            aside={t('booking.nextSchedule')}
             current={2}
             total={4}
-            variant="plain"
           />
         )}
         <View style={styles.intro}>
@@ -78,13 +77,6 @@ export function SelectServiceScreen() {
           </View>
           <Text style={styles.summaryPrice}>{t('home.price', { value: selected.price })}</Text>
         </View>
-        <Pressable
-          onPress={() => (router.canGoBack() ? router.back() : router.push('/select-pet'))}
-          style={({ pressed }) => [styles.add, pressed && styles.pressed]}
-        >
-          <MaterialIcons color={theme.colors.primary} name="add" size={20} />
-          <Text style={styles.addLabel}>{t('selectService.addPet')}</Text>
-        </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push({ pathname: '/service-details', params: { serviceId: selected.id } })}
@@ -204,21 +196,6 @@ function selectServiceStyles(theme: Theme) {
       fontSize: t.typography.sizes.heading,
       lineHeight: t.typography.lineHeights.heading,
     },
-    add: {
-      alignItems: 'center',
-      backgroundColor: t.colors.surfaceHigh,
-      borderRadius: t.radii.button,
-      flexDirection: 'row',
-      gap: t.spacing.sm,
-      height: 44,
-      justifyContent: 'center',
-    },
-    addLabel: {
-      color: t.colors.primary,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.caption,
-      lineHeight: t.typography.lineHeights.caption,
-    },
     continue: {
       alignItems: 'center',
       backgroundColor: t.colors.primary,
@@ -236,9 +213,6 @@ function selectServiceStyles(theme: Theme) {
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: t.typography.sizes.label,
       lineHeight: t.typography.lineHeights.label,
-    },
-    pressed: {
-      opacity: 0.9,
     },
   }), theme);
 }

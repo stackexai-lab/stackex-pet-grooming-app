@@ -86,6 +86,7 @@ function progressStyles(theme: Theme) {
   return createStyles((t) => ({
     wrap: {
       gap: t.spacing.sm,
+      marginBottom: t.spacing.md,
     },
     meta: {
       alignItems: 'center',

@@ -132,6 +132,11 @@ export function SelectPetScreen() {
     ]);
   }
 
+  function continueBooking() {
+    if (!selectedId) return;
+    router.push('/select-service');
+  }
+
   return (
     <View style={styles.screen}>
       <FlowHeader insetTop={insets.top} title={t('selectPet.title')} />
@@ -141,7 +146,7 @@ export function SelectPetScreen() {
         showsVerticalScrollIndicator={false}
         style={styles.flex}
       >
-          <BookingProgress aside={t('selectPet.bookingFlow')} current={1} total={4} />
+          <BookingProgress aside={t('booking.nextService')} current={1} total={4} />
           <View style={styles.intro}>
             <Text style={styles.headline}>{t('selectPet.headline')}</Text>
             <Text style={styles.subtitle}>{t('selectPet.subtitle')}</Text>
@@ -175,7 +180,7 @@ export function SelectPetScreen() {
         <Pressable
           accessibilityRole="button"
           disabled={!selectedId}
-          onPress={() => router.push('/select-service')}
+          onPress={continueBooking}
           style={({ pressed }) => [
             styles.continue,
             !selectedId && styles.continueDisabled,

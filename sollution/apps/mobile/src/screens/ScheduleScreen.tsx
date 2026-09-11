@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { BookingProgress } from '@/components/BookingProgress';
 import { FlowHeader } from '@/components/FlowHeader';
 import { cardShadow } from '@/components/ServiceCard';
 import { homeMock } from '@/mocks/home';
@@ -44,6 +45,7 @@ export function ScheduleScreen() {
         contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, theme.spacing.xl) }]}
         showsVerticalScrollIndicator={false}
       >
+        <BookingProgress aside={t('booking.nextConfirm')} current={3} total={4} />
         <Text style={styles.context}>
           {t('schedule.context', {
             pet: homeMock.pet.name,

@@ -37,9 +37,14 @@ const ar: Localized<typeof en> = {
     goldenRetriever: 'جولدن ريتريفر',
     profile: 'الملف الشخصي',
   },
+  booking: {
+    nextService: 'التالي: الخدمة',
+    nextSchedule: 'التالي: التاريخ والوقت',
+    nextConfirm: 'التالي: التأكيد',
+    nextPayment: 'التالي: الدفع',
+  },
   selectPet: {
     title: 'اختر الحيوان',
-    bookingFlow: 'مسار الحجز',
     stepOf: 'الخطوة {{current}} من {{total}}',
     headline: 'من سيحصل على التهذيب؟',
     subtitle: 'اختر فرداً مدللاً من العائلة أو أضف حيواناً جديداً بسرعة.',
@@ -74,7 +79,6 @@ const ar: Localized<typeof en> = {
   },
   selectService: {
     title: 'اختر الخدمة',
-    nextPetDetails: 'التالي: تفاصيل الحيوان',
     headline: 'اختر الخدمة',
     subtitle: 'اختر أفضل علاج لحيوانك الأليف',
     duration: '{{minutes}} دقيقة',
@@ -90,7 +94,6 @@ const ar: Localized<typeof en> = {
     catGroomingDescription: 'غسيل هادئ بدون ماء، تمشيط لإزالة الشعر الزائد، وتقليم مخالب لطيف.',
     catGroomingHighlight: 'أسلوب منخفض التوتر',
     selected: 'المحدد:',
-    addPet: 'إضافة حيوان',
     promiseTitle: 'وعد الأقدام اللطيفة',
     promiseBody: 'منتجات مضادة للحساسية وغير سامة لكل حيوان.',
   },
@@ -112,6 +115,8 @@ const ar: Localized<typeof en> = {
     addonPrice: '+${{value}}',
     totalEst: 'الإجمالي التقديري',
     selectService: 'اختيار الخدمة',
+    addAnotherPet: 'إضافة حيوان آخر',
+    continueToSchedule: 'متابعة إلى الجدولة',
   },
   schedule: {
     title: 'اختر التاريخ والوقت',

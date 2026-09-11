@@ -44,7 +44,7 @@ export function ConfirmationScreen() {
         contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, theme.spacing.xxl) }]}
         showsVerticalScrollIndicator={false}
       >
-        <BookingProgress current={3} total={3} variant="segments" />
+        <BookingProgress aside={t('booking.nextPayment')} current={4} total={4} />
         <View style={styles.intro}>
           <Text style={styles.headline}>
             {t('confirmation.headline')}
