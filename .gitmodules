@@ -1,0 +1,3 @@
+﻿[submodule "sollution/apps/backend"]
+	path = sollution/apps/backend
+	url = https://github.com/stackexai-lab/stackex-generic-solution-service-booking-backend.git
