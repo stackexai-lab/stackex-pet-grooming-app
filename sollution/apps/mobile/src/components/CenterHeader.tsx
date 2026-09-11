@@ -10,9 +10,11 @@ type CenterHeaderProps = {
   insetTop: number;
   title: string;
   plain?: boolean;
+  elevatedBack?: boolean;
+  profile?: boolean;
 };
 
-export function CenterHeader({ insetTop, title, plain }: CenterHeaderProps) {
+export function CenterHeader({ insetTop, title, plain, elevatedBack, profile }: CenterHeaderProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const { theme } = useTheme();
@@ -26,12 +28,27 @@ export function CenterHeader({ insetTop, title, plain }: CenterHeaderProps) {
           accessibilityLabel={t('back')}
           accessibilityRole="button"
           onPress={() => router.back()}
-          style={({ pressed }) => [styles.back, !plain && styles.backDashed, pressed && styles.pressed]}
+          style={({ pressed }) => [
+            styles.back,
+            elevatedBack && styles.backElevated,
+            !plain && !elevatedBack && styles.backDashed,
+            pressed && styles.pressed,
+          ]}
         >
           <MaterialIcons color={theme.colors.ink} name={backIcon} size={20} />
         </Pressable>
         <Text numberOfLines={1} style={styles.title}>{title}</Text>
-        <View style={styles.spacer} />
+        {profile ? (
+          <Pressable
+            accessibilityLabel={t('home.profile')}
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.avatar, pressed && styles.pressed]}
+          >
+            <MaterialIcons color={theme.colors.primaryText} name="person" size={18} />
+          </Pressable>
+        ) : (
+          <View style={styles.spacer} />
+        )}
       </View>
     </View>
   );
@@ -60,16 +77,33 @@ function centerHeaderStyles(theme: Theme) {
       borderStyle: 'dashed',
       borderWidth: 1,
     },
+    backElevated: {
+      backgroundColor: t.colors.surface,
+      elevation: 2,
+      shadowColor: t.colors.overlay,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.06,
+      shadowRadius: 8,
+    },
     title: {
       color: t.colors.ink,
       flex: 1,
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: t.typography.sizes.heading,
       lineHeight: t.typography.lineHeights.heading,
+      paddingHorizontal: t.spacing.sm,
       textAlign: 'center',
     },
     spacer: {
       width: 44,
+    },
+    avatar: {
+      alignItems: 'center',
+      backgroundColor: t.colors.primary,
+      borderRadius: t.radii.pill,
+      height: 32,
+      justifyContent: 'center',
+      width: 32,
     },
     pressed: {
       opacity: 0.85,

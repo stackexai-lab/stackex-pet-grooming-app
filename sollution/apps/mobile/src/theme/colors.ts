@@ -11,6 +11,7 @@ export const sageColors = {
   primaryContainer: '#D97736',
   primaryText: '#FFFFFF',
   primaryFixed: '#FFDBC9',
+  primaryFixedSoft: 'rgba(255, 219, 201, 0.4)',
   onPrimaryFixed: '#321200',
   onPrimaryFixedVariant: '#753400',
   secondary: '#446557',

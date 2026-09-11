@@ -39,7 +39,10 @@ export function SelectServiceScreen() {
           {groomingServices.map((service) => (
             <ServicePackageCard
               key={service.id}
-              onPress={() => setSelectedId(service.id)}
+              onPress={() => {
+                setSelectedId(service.id);
+                router.push({ pathname: '/service-details', params: { serviceId: service.id } });
+              }}
               selected={service.id === selectedId}
               service={service}
             />
@@ -72,7 +75,7 @@ export function SelectServiceScreen() {
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={() => router.push({ pathname: '/schedule', params: { serviceId: selected.id } })}
+          onPress={() => router.push({ pathname: '/service-details', params: { serviceId: selected.id } })}
           style={({ pressed }) => [styles.continue, pressed && styles.continuePressed]}
         >
           <Text style={styles.continueLabel}>{t('continue')}</Text>
