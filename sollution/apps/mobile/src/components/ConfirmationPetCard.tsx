@@ -29,19 +29,9 @@ export function ConfirmationPetCard({ booking }: ConfirmationPetCardProps) {
           </View>
         </View>
         <View style={styles.petCopy}>
-          <View style={styles.nameRow}>
-            <Text numberOfLines={1} style={styles.name}>{booking.name}</Text>
-            <View style={[styles.tag, booking.vip ? styles.tagVip : styles.tagGuest]}>
-              <Text style={[styles.tagLabel, booking.vip ? styles.tagVipLabel : styles.tagGuestLabel]}>
-                {t(booking.vip ? 'confirmation.vipGuest' : 'confirmation.guest')}
-              </Text>
-            </View>
-          </View>
+          <Text numberOfLines={1} style={styles.name}>{booking.name}</Text>
           <Text numberOfLines={1} style={styles.meta}>
-            {t('confirmation.petMeta', {
-              breed: t(booking.breedKey),
-              age: t('confirmation.ageYears', { age: booking.age }),
-            })}
+            {t(booking.breedKey)}
           </Text>
         </View>
       </View>
@@ -65,17 +55,6 @@ export function ConfirmationPetCard({ booking }: ConfirmationPetCardProps) {
         uppercase={!isRTL}
       />
 
-      <View style={styles.groomer}>
-        <View style={styles.groomerCopy}>
-          <MaterialIcons color={theme.colors.primary} name="verified" size={18} />
-          <Text numberOfLines={1} style={styles.groomerName}>
-            {t('confirmation.groomer', { name: t(booking.groomerKey) })}
-          </Text>
-        </View>
-        <View style={styles.assigned}>
-          <Text style={styles.assignedLabel}>{t('confirmation.assigned')}</Text>
-        </View>
-      </View>
     </View>
   );
 }
@@ -158,9 +137,9 @@ function petCardStyles(theme: Theme) {
     },
     name: {
       color: t.colors.ink,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.heading,
-      lineHeight: t.typography.lineHeights.heading,
+      fontFamily: t.typography.fontFamilies.bodyBold,
+      fontSize: t.typography.sizes.title,
+      lineHeight: t.typography.lineHeights.title,
     },
     tag: {
       borderRadius: t.radii.pill,
@@ -187,8 +166,8 @@ function petCardStyles(theme: Theme) {
     meta: {
       color: t.colors.textSecondary,
       fontFamily: t.typography.fontFamilies.body,
-      fontSize: t.typography.sizes.caption,
-      lineHeight: t.typography.lineHeights.caption,
+      fontSize: t.typography.sizes.label,
+      lineHeight: t.typography.lineHeights.label,
       marginTop: 2,
     },
     line: {
@@ -237,42 +216,6 @@ function petCardStyles(theme: Theme) {
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: t.typography.sizes.caption,
       lineHeight: t.typography.lineHeights.caption,
-    },
-    groomer: {
-      alignItems: 'center',
-      backgroundColor: t.colors.surfaceHigh,
-      borderRadius: t.radii.pill,
-      flexDirection: 'row',
-      gap: t.spacing.sm,
-      justifyContent: 'space-between',
-      padding: t.spacing.sm,
-      paddingStart: t.spacing.md,
-    },
-    groomerCopy: {
-      alignItems: 'center',
-      flex: 1,
-      flexDirection: 'row',
-      gap: t.spacing.sm,
-      minWidth: 0,
-    },
-    groomerName: {
-      color: t.colors.ink,
-      flexShrink: 1,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.caption,
-      lineHeight: t.typography.lineHeights.caption,
-    },
-    assigned: {
-      backgroundColor: t.colors.surface,
-      borderRadius: t.radii.pill,
-      paddingHorizontal: 10,
-      paddingVertical: 4,
-    },
-    assignedLabel: {
-      color: t.colors.secondary,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.overline,
-      lineHeight: t.typography.lineHeights.overline,
     },
   }), theme);
 }

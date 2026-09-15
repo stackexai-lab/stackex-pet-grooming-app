@@ -120,7 +120,7 @@ heroSubtitle: 'Gentle grooming  and care you can trust.',
   },
   confirmation: {
     title: 'Booking Confirmation',
-    headline: 'Almost pampered!',
+    headline: 'You’re almost there!',
     subtitle: "Review {{pets}}'s grooming retreat details before we secure your spots.",
     vipGuest: 'VIP Guest',
     guest: 'Guest',

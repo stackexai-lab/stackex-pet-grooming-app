@@ -125,7 +125,7 @@ const ar: Localized<typeof en> = {
   },
   confirmation: {
     title: 'تأكيد الحجز',
-    headline: 'أوشكت على الدلال!',
+    headline: 'أنت على وشك الوصول!',
     subtitle: 'راجع تفاصيل منتجع التهذيب لـ {{pets}} قبل تأكيد المواعيد.',
     vipGuest: 'ضيف مميز',
     guest: 'ضيف',

@@ -8,7 +8,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BookingProgress } from '@/components/BookingProgress';
 import { ConfirmationPetCard } from '@/components/ConfirmationPetCard';
 import { FlowHeader } from '@/components/FlowHeader';
-import { cardShadow } from '@/components/ServiceCard';
 import { confirmationBookings, confirmationLogistics } from '@/mocks/confirmation';
 import { formatSlotTime, scheduleSlots } from '@/mocks/schedule';
 import { createStyles, useTheme, type Theme } from '@/theme';
@@ -28,11 +27,22 @@ export function ConfirmationScreen() {
   const slot = scheduleSlots.find((item) => item.id === slotId)
     ?? scheduleSlots.find((item) => item.id === '14:30')
     ?? scheduleSlots[9];
+  const arrivalWithSlot = new Date(
+    arrival.getFullYear(),
+    arrival.getMonth(),
+    arrival.getDate(),
+    slot.hour,
+    slot.minute,
+  );
   const arrivalLabel = `${new Intl.DateTimeFormat(locale, {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
-  }).format(arrival)} · ${formatSlotTime(slot, locale)}`;
+    year: 'numeric',
+  }).format(arrivalWithSlot)} · ${new Intl.DateTimeFormat(locale, {
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(arrivalWithSlot)}`;
   const pets = confirmationBookings.map((booking) => booking.name).join(' & ');
   const total = t('confirmation.money', { value: confirmationLogistics.total.toFixed(2) });
   const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
@@ -48,7 +58,8 @@ export function ConfirmationScreen() {
         <View style={styles.intro}>
           <Text style={styles.headline}>
             {t('confirmation.headline')}
-            {' ✨'}
+            {' '}
+            🐾
           </Text>
           <Text style={styles.subtitle}>{t('confirmation.subtitle', { pets })}</Text>
         </View>
@@ -58,35 +69,17 @@ export function ConfirmationScreen() {
           ))}
         </View>
         <View style={styles.logistics}>
-          <Text style={styles.logisticsTitle}>{t('confirmation.logistics')}</Text>
           <View style={styles.line}>
             <View style={[styles.lineIcon, styles.iconCool]}>
-              <MaterialIcons color={theme.colors.onSecondaryContainer} name="calendar-today" size={20} />
+              <MaterialIcons color={theme.colors.onPrimaryFixed} name="calendar-today" size={20} />
             </View>
             <View style={styles.lineCopy}>
               <Text style={[styles.lineLabel, !isRTL && styles.uppercase]}>{t('confirmation.dateArrival')}</Text>
-              <Text numberOfLines={1} style={styles.lineTitle}>{arrivalLabel}</Text>
-            </View>
-          </View>
-          <View style={styles.line}>
-            <View style={[styles.lineIcon, styles.iconWarm]}>
-              <MaterialIcons color={theme.colors.onTertiaryFixed} name="storefront" size={20} />
-            </View>
-            <View style={styles.lineCopy}>
-              <Text style={[styles.lineLabel, !isRTL && styles.uppercase]}>{t('confirmation.location')}</Text>
-              <Text numberOfLines={2} style={styles.lineTitle}>{t('confirmation.studio')}</Text>
+              <Text style={styles.lineTitle}>{arrivalLabel}</Text>
             </View>
           </View>
         </View>
-        <View style={styles.note}>
-          <View style={styles.noteIcon}>
-            <MaterialIcons color={theme.colors.primary} name="event-available" size={18} />
-          </View>
-          <View style={styles.noteCopy}>
-            <Text style={styles.noteTitle}>{t('confirmation.rescheduleTitle')}</Text>
-            <Text style={styles.noteBody}>{t('confirmation.rescheduleBody')}</Text>
-          </View>
-        </View>
+       
         <Pressable
           onPress={() => router.push('/payment')}
           style={({ pressed }) => [styles.pay, pressed && styles.pressed]}
@@ -95,7 +88,7 @@ export function ConfirmationScreen() {
           <Text style={styles.payLabel}>{t('confirmation.proceedToPayment', { total })}</Text>
           <MaterialIcons color={theme.colors.primaryText} name={forward} size={20} />
         </Pressable>
-        <Text style={styles.footerNote}>{t('confirmation.subtitle', { pets })}</Text>
+       
       </ScrollView>
     </View>
   );
@@ -132,22 +125,14 @@ function confirmationStyles(theme: Theme) {
       gap: t.spacing.md,
     },
     logistics: {
-      backgroundColor: t.colors.surface,
+      backgroundColor: t.colors.primaryFixedSoft,
       borderRadius: t.radii.card,
-      gap: t.spacing.sm,
       marginTop: t.spacing.md,
       padding: t.spacing.gutter,
-      ...cardShadow(t.colors.overlay),
-    },
-    logisticsTitle: {
-      color: t.colors.ink,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.label,
-      lineHeight: t.typography.lineHeights.label,
     },
     line: {
       alignItems: 'center',
-      backgroundColor: t.colors.surfaceSecondary,
+      backgroundColor: 'transparent',
       borderRadius: t.radii.input,
       flexDirection: 'row',
       gap: t.spacing.sm,
@@ -161,10 +146,7 @@ function confirmationStyles(theme: Theme) {
       width: 36,
     },
     iconCool: {
-      backgroundColor: t.colors.secondaryContainer,
-    },
-    iconWarm: {
-      backgroundColor: t.colors.tertiaryFixed,
+      backgroundColor: t.colors.primaryFixed,
     },
     lineCopy: {
       flex: 1,
@@ -182,9 +164,10 @@ function confirmationStyles(theme: Theme) {
     },
     lineTitle: {
       color: t.colors.ink,
+      flexShrink: 1,
       fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.label,
-      lineHeight: t.typography.lineHeights.label,
+      fontSize: t.typography.sizes.bodyLarge,
+      lineHeight: t.typography.lineHeights.body,
     },
     note: {
       backgroundColor: t.colors.surfaceSecondary,
