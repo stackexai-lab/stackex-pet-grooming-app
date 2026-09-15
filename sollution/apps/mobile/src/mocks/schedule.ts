@@ -5,36 +5,30 @@ export type TimeSlot = {
   available: boolean;
 };
 
-export const scheduleDays = [
-  new Date(2026, 5, 18),
-  new Date(2026, 5, 19),
-  new Date(2026, 5, 20),
-  new Date(2026, 5, 21),
-  new Date(2026, 5, 22),
-];
+const currentMonth = new Date();
+const nextMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+const unavailableDates = new Set([
+  `${currentMonth.getFullYear()}-${currentMonth.getMonth()}-19`,
+  `${currentMonth.getFullYear()}-${currentMonth.getMonth()}-21`,
+  `${nextMonth.getFullYear()}-${nextMonth.getMonth()}-23`,
+]);
 
-export const scheduleSlots: TimeSlot[] = [
-  { id: '00:00', hour: 0, minute: 0, available: true },
-  { id: '02:00', hour: 2, minute: 0, available: false },
-  { id: '04:00', hour: 4, minute: 0, available: true },
-  { id: '06:00', hour: 6, minute: 0, available: true },
-  { id: '08:00', hour: 8, minute: 0, available: true },
-  { id: '09:00', hour: 9, minute: 0, available: true },
-  { id: '10:00', hour: 10, minute: 0, available: true },
-  { id: '11:30', hour: 11, minute: 30, available: true },
-  { id: '13:00', hour: 13, minute: 0, available: false },
-  { id: '14:30', hour: 14, minute: 30, available: true },
-  { id: '16:00', hour: 16, minute: 0, available: true },
-  { id: '17:30', hour: 17, minute: 30, available: true },
-  { id: '19:00', hour: 19, minute: 0, available: true },
-  { id: '20:30', hour: 20, minute: 30, available: true },
-  { id: '22:00', hour: 22, minute: 0, available: true },
-  { id: '23:30', hour: 23, minute: 30, available: true },
-];
+export const scheduleDays = [currentMonth, nextMonth].flatMap((month) => {
+  const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  return Array.from({ length: daysInMonth }, (_, index) => new Date(month.getFullYear(), month.getMonth(), index + 1))
+    .filter((date) => !unavailableDates.has(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`));
+});
+
+export const scheduleSlots: TimeSlot[] = Array.from({ length: 24 }, (_, hour) => ({
+  id: `${String(hour).padStart(2, '0')}:00`,
+  hour,
+  minute: 0,
+  available: true,
+}));
 
 export const defaultScheduleSelection = {
   day: scheduleDays[2],
-  slotId: '14:30',
+  slotId: '14:00',
 };
 
 export function formatSlotTime(slot: TimeSlot, locale: string) {

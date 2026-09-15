@@ -514,7 +514,6 @@ function detailsStyles(theme: Theme) {
       gap: t.spacing.sm,
       height: t.spacing.control,
       justifyContent: 'center',
-      maxWidth: 240,
     },
     selectPressed: {
       backgroundColor: t.colors.primary,
