@@ -1,4 +1,4 @@
-import { I18nManager } from 'react-native';
+import { I18nManager, View } from 'react-native';
 import { getLocales } from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { I18nextProvider } from 'react-i18next';
@@ -62,7 +62,11 @@ export function LanguageProvider({ children }: PropsWithChildren) {
 
   return (
     <I18nextProvider i18n={i18nInstance}>
-      <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
+      <LanguageContext.Provider value={value}>
+        <View style={{ direction: locale === 'ar' ? 'rtl' : 'ltr', flex: 1 }}>
+          {children}
+        </View>
+      </LanguageContext.Provider>
     </I18nextProvider>
   );
 }

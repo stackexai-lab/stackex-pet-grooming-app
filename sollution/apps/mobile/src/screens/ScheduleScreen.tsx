@@ -27,6 +27,7 @@ export function ScheduleScreen() {
 
   const selectedDate = scheduleDays.find((day) => day.getTime() === selectedDay) ?? defaultScheduleSelection.day;
   const selectedSlot = scheduleSlots.find((slot) => slot.id === selectedSlotId) ?? scheduleSlots[9];
+  const forwardIcon = locale === 'ar' ? 'arrow-back' : 'arrow-forward';
   const [visibleMonth, setVisibleMonth] = useState(
     new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   );
@@ -77,6 +78,15 @@ export function ScheduleScreen() {
             time: formatSlotTime(selectedSlot, locale),
           })}
         </Text>
+        <View style={styles.addressCard}>
+          <View style={styles.addressCopy}>
+            <Text style={styles.addressLabel}>{t('profilePage.groomingAddress')}</Text>
+            <Text style={styles.addressValue}>{t('profilePage.address')}</Text>
+          </View>
+          <Pressable accessibilityRole="button" onPress={() => router.push('/profile')} style={styles.addressEdit}>
+            <Text style={styles.addressEditLabel}>{t('profilePage.edit')}</Text>
+          </Pressable>
+        </View>
         <Pressable
           onPress={() => router.push({
             pathname: '/confirmation',
@@ -87,7 +97,8 @@ export function ScheduleScreen() {
           })}
           style={({ pressed }) => [styles.continue, pressed && styles.continuePressed]}
         >
-          <Text style={styles.continueLabel}>Set date &amp; time</Text>
+          <Text style={styles.continueLabel}>{t('schedule.continue')}</Text>
+          <MaterialIcons color={theme.colors.primaryText} name={forwardIcon} size={20} />
         </Pressable>
       </ScrollView>
     </View>
@@ -161,7 +172,7 @@ function scheduleStyles(theme: Theme) {
     },
     content: {
       paddingHorizontal: t.spacing.gutter,
-      paddingTop: t.spacing.md,
+      paddingTop: t.spacing.sm,
     },
     sectionLabel: {
       color: t.colors.ink,
@@ -173,7 +184,7 @@ function scheduleStyles(theme: Theme) {
     calendarCard: {
       backgroundColor: t.colors.surface,
       borderRadius: t.radii.card,
-      marginBottom: t.spacing.xl,
+      marginBottom: t.spacing.lg,
       padding: t.spacing.md,
     },
     monthRow: {
@@ -249,7 +260,7 @@ function scheduleStyles(theme: Theme) {
       alignItems: 'center',
       backgroundColor: t.colors.surface,
       borderRadius: t.radii.card,
-      marginBottom: t.spacing.md,
+      marginBottom: t.spacing.sm,
       height: 104,
     },
     timeScrollerContent: {
@@ -272,18 +283,66 @@ function scheduleStyles(theme: Theme) {
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: t.typography.sizes.caption,
       lineHeight: t.typography.lineHeights.caption,
-      marginBottom: t.spacing.md,
+      marginBottom: t.spacing.sm,
       textAlign: 'center',
+    },
+    addressCard: {
+      alignItems: 'center',
+      backgroundColor: t.colors.surface,
+      borderColor: t.colors.border,
+      borderRadius: t.radii.input,
+      borderWidth: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: t.spacing.sm,
+      paddingHorizontal: t.spacing.md,
+      paddingVertical: 12,
+    },
+    addressCopy: {
+      flex: 1,
+      paddingEnd: t.spacing.sm,
+    },
+    addressLabel: {
+      color: t.colors.textSecondary,
+      fontFamily: t.typography.fontFamilies.body,
+      fontSize: 10,
+      lineHeight: 14,
+      textTransform: 'uppercase',
+    },
+    addressValue: {
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.body,
+      fontSize: 13,
+      lineHeight: 18,
+      marginTop: 3,
+    },
+    addressEdit: {
+      paddingHorizontal: 4,
+      paddingVertical: 6,
+    },
+    addressEditLabel: {
+      color: t.colors.primary,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: 11,
+      lineHeight: 16,
     },
     continue: {
       alignItems: 'center',
       backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
-      height: 56,
+      elevation: 3,
+      flexDirection: 'row',
+      gap: t.spacing.sm,
       justifyContent: 'center',
+      minHeight: 58,
+      shadowColor: t.colors.overlay,
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.16,
+      shadowRadius: 8,
     },
     continuePressed: {
-      backgroundColor: t.colors.primaryContainer,
+      opacity: 0.88,
+      transform: [{ scale: 0.99 }],
     },
     continueLabel: {
       color: t.colors.primaryText,

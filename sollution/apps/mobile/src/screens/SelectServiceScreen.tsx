@@ -32,7 +32,7 @@ export function SelectServiceScreen() {
 
   return (
     <View style={styles.screen}>
-      <FlowHeader insetTop={insets.top} title={t('selectService.title')} />
+      <FlowHeader elevatedBack insetTop={insets.top} title={t('selectService.title')} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {browse ? null : (
           <BookingProgress

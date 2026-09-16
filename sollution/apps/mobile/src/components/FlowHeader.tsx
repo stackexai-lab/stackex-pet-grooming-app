@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { Image, Pressable, Text, View, I18nManager } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
+import { useLanguage } from '@/i18n';
 import { homeImages } from '@/mocks/home';
 import { createStyles, useTheme, type Theme } from '@/theme';
 
@@ -17,10 +18,11 @@ type FlowHeaderProps = {
 
 export function FlowHeader({ insetTop, title, dashedBack, elevatedBack, brandedLogo }: FlowHeaderProps) {
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const router = useRouter();
   const { theme } = useTheme();
   const styles = useMemo(() => flowHeaderStyles(theme), [theme]);
-  const backIcon = I18nManager.isRTL ? 'arrow-forward' : 'arrow-back';
+  const backIcon = isRTL ? 'arrow-forward' : 'arrow-back';
 
   return (
     <View style={[styles.wrap, { paddingTop: insetTop }]}>

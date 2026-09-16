@@ -6,11 +6,12 @@ import { useTranslation } from 'react-i18next';
 
 import { createStyles, useTheme, type Theme } from '@/theme';
 
-type TabKey = 'home' | 'bookings';
+type TabKey = 'home' | 'bookings' | 'profile';
 
 const tabs: { key: TabKey; icon: keyof typeof MaterialIcons.glyphMap; labelKey: `tabs.${TabKey}`; badge?: boolean }[] = [
   { key: 'home', icon: 'pets', labelKey: 'tabs.home' },
   { key: 'bookings', icon: 'calendar-today', labelKey: 'tabs.bookings', badge: true },
+  { key: 'profile', icon: 'person-outline', labelKey: 'tabs.profile' },
 ];
 
 type BottomTabBarProps = {
@@ -40,6 +41,7 @@ export function BottomTabBar({ active, insetBottom }: BottomTabBarProps) {
               onPress={() => {
                 if (tab.key === 'home') router.push('/');
                 if (tab.key === 'bookings') router.push('/booking-history');
+                if (tab.key === 'profile') router.push('/profile');
               }}
               style={styles.item}
             >

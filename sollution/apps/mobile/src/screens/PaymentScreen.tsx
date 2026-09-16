@@ -5,7 +5,6 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  Switch,
   Text,
   TextInput,
   View,
@@ -26,18 +25,17 @@ export function PaymentScreen() {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const styles = useMemo(() => paymentStyles(theme), [theme]);
-  const [name, setName] = useState(paymentMock.cardholderName);
-  const [number, setNumber] = useState(paymentMock.cardNumber);
-  const [expires, setExpires] = useState(paymentMock.expires);
-  const [cvc, setCvc] = useState(paymentMock.cvc);
-  const [zip, setZip] = useState(paymentMock.postalCode);
-  const [saveCard, setSaveCard] = useState(true);
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [expires, setExpires] = useState('');
+  const [cvc, setCvc] = useState('');
+  const [zip, setZip] = useState('');
   const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
   const total = t('confirmation.money', { value: paymentMock.total.toFixed(2) });
 
   return (
     <View style={styles.screen}>
-      <FlowHeader dashedBack insetTop={insets.top} title={t('confirmation.title')} />
+      <FlowHeader elevatedBack insetTop={insets.top} title={t('payment.title')} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <ScrollView
           contentContainerStyle={styles.content}
@@ -47,17 +45,15 @@ export function PaymentScreen() {
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle}>{t('payment.cardInformation')}</Text>
-              <View style={styles.brands}>
-                <View style={styles.brand}><Text style={styles.brandLabel}>{t('payment.visa')}</Text></View>
-                <View style={styles.brand}><Text style={styles.brandLabel}>{t('payment.mastercard')}</Text></View>
-                <View style={styles.brand}><Text style={styles.brandLabel}>{t('payment.amex')}</Text></View>
-              </View>
+              
             </View>
 
             <Field label={t('payment.cardholderName')}>
               <View style={styles.inputWrap}>
                 <TextInput
                   onChangeText={setName}
+                  placeholder={t('payment.cardholderName')}
+                  placeholderTextColor={theme.colors.textMuted}
                   style={styles.input}
                   underlineColorAndroid="transparent"
                   value={name}
@@ -69,7 +65,10 @@ export function PaymentScreen() {
             <Field label={t('payment.cardNumber')}>
               <View style={styles.inputWrap}>
                 <TextInput
+                  keyboardType="numeric"
                   onChangeText={setNumber}
+                  placeholder="4242 4242 4242 4242"
+                  placeholderTextColor={theme.colors.textMuted}
                   style={styles.input}
                   underlineColorAndroid="transparent"
                   value={number}
@@ -81,7 +80,10 @@ export function PaymentScreen() {
             <View style={styles.row}>
               <Field label={t('payment.expires')} style={styles.half}>
                 <TextInput
+                  keyboardType="numeric"
                   onChangeText={setExpires}
+                  placeholder="MM/YY"
+                  placeholderTextColor={theme.colors.textMuted}
                   style={[styles.input, styles.inputSolo, styles.center]}
                   underlineColorAndroid="transparent"
                   value={expires}
@@ -103,12 +105,14 @@ export function PaymentScreen() {
                   <TextInput
                     keyboardType="number-pad"
                     onChangeText={setCvc}
+                    placeholder="123"
+                    placeholderTextColor={theme.colors.textMuted}
                     secureTextEntry
                     style={[styles.input, styles.center]}
                     underlineColorAndroid="transparent"
                     value={cvc}
                   />
-                  <MaterialIcons color={theme.colors.textMuted} name="lock-outline" size={16} />
+                  
                 </View>
               </Field>
             </View>
@@ -117,11 +121,13 @@ export function PaymentScreen() {
               <View style={styles.zipRow}>
                 <Pressable style={styles.country}>
                   <Text style={styles.countryCode}>{paymentMock.countryCode}</Text>
-                  <Text style={styles.countryLabel}>{paymentMock.countryLabel}</Text>
                   <MaterialIcons color={theme.colors.textMuted} name="keyboard-arrow-down" size={16} />
                 </Pressable>
                 <TextInput
+                  keyboardType="numeric"
                   onChangeText={setZip}
+                  placeholder="94107"
+                  placeholderTextColor={theme.colors.textMuted}
                   style={[styles.input, styles.inputSolo, styles.zip]}
                   underlineColorAndroid="transparent"
                   value={zip}
@@ -129,19 +135,7 @@ export function PaymentScreen() {
               </View>
             </Field>
 
-            <View style={styles.saveRow}>
-              <View style={styles.saveCopy}>
-                <Text style={styles.saveTitle}>{t('payment.saveForLater')}</Text>
-                <Text style={styles.saveHint}>{t('payment.saveHint', { pets: paymentMock.pets })}</Text>
-              </View>
-              <Switch
-                ios_backgroundColor={theme.colors.surfaceHigh}
-                onValueChange={setSaveCard}
-                thumbColor={theme.colors.surface}
-                trackColor={{ false: theme.colors.surfaceHigh, true: theme.colors.primaryContainer }}
-                value={saveCard}
-              />
-            </View>
+           
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -199,21 +193,28 @@ function paymentStyles(theme: Theme) {
       flex: 1,
     },
     content: {
+      paddingBottom: t.spacing.xl,
       paddingHorizontal: t.spacing.md,
       paddingTop: t.spacing.sm,
     },
     card: {
+      alignSelf: 'center',
       backgroundColor: t.colors.surface,
       borderColor: t.colors.surfaceVariant,
       borderRadius: t.radii.hero,
       borderWidth: 1,
       gap: 14,
+      maxWidth: 480,
+      overflow: 'hidden',
       padding: t.spacing.gutter,
+      width: '100%',
       ...cardShadow(t.colors.overlay),
     },
     cardHeader: {
       alignItems: 'center',
       flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
       justifyContent: 'space-between',
       marginBottom: t.spacing.xs,
     },
@@ -225,7 +226,10 @@ function paymentStyles(theme: Theme) {
     },
     brands: {
       flexDirection: 'row',
+      flexShrink: 1,
+      flexWrap: 'wrap',
       gap: 6,
+      justifyContent: 'flex-end',
     },
     brand: {
       backgroundColor: t.colors.badgeSoft,
@@ -256,6 +260,7 @@ function paymentStyles(theme: Theme) {
       backgroundColor: t.colors.surfaceSecondary,
       borderRadius: t.radii.input,
       flexDirection: 'row',
+      minWidth: 0,
       paddingEnd: t.spacing.md,
     },
     input: {
@@ -279,8 +284,10 @@ function paymentStyles(theme: Theme) {
     },
     half: {
       flex: 1,
+      minWidth: 0,
     },
     zipRow: {
+      alignItems: 'center',
       flexDirection: 'row',
       gap: 10,
     },
@@ -289,8 +296,10 @@ function paymentStyles(theme: Theme) {
       backgroundColor: t.colors.surfaceSecondary,
       borderRadius: t.radii.input,
       flexDirection: 'row',
+      flexShrink: 0,
       gap: 6,
       minHeight: 44,
+      minWidth: 64,
       paddingHorizontal: 10,
     },
     countryCode: {
@@ -306,54 +315,45 @@ function paymentStyles(theme: Theme) {
     },
     zip: {
       flex: 1,
-    },
-    saveRow: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingTop: t.spacing.xs,
-    },
-    saveCopy: {
-      flex: 1,
       minWidth: 0,
-      paddingEnd: t.spacing.sm,
-    },
-    saveTitle: {
-      color: t.colors.ink,
-      fontFamily: t.typography.fontFamilies.bodyBold,
-      fontSize: t.typography.sizes.caption,
-      lineHeight: t.typography.lineHeights.caption,
-    },
-    saveHint: {
-      color: t.colors.textMuted,
-      fontFamily: t.typography.fontFamilies.bodyMedium,
-      fontSize: t.typography.sizes.overline,
-      lineHeight: t.typography.lineHeights.overline,
-      marginTop: 2,
     },
     footer: {
+      alignSelf: 'center',
+      maxWidth: 480,
       paddingHorizontal: t.spacing.md,
       paddingTop: t.spacing.sm,
+      width: '100%',
     },
     pay: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       justifyContent: 'space-between',
+      maxWidth: 480,
+      minHeight: 56,
       paddingHorizontal: t.spacing.gutter,
       paddingVertical: 14,
+      width: '100%',
+      shadowColor: t.colors.overlay,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.12,
+      shadowRadius: 10,
+      elevation: 3,
     },
     payLead: {
       alignItems: 'center',
       flexDirection: 'row',
+      flexShrink: 1,
       gap: t.spacing.sm,
+      minWidth: 0,
     },
     payLabel: {
       color: t.colors.primaryText,
+      flexShrink: 1,
       fontFamily: t.typography.fontFamilies.bodyBold,
-      fontSize: t.typography.sizes.caption,
-      lineHeight: t.typography.lineHeights.caption,
+      fontSize: t.typography.sizes.label,
+      lineHeight: t.typography.lineHeights.label,
     },
     pressed: {
       opacity: 0.94,

@@ -139,7 +139,7 @@ export function SelectPetScreen() {
 
   return (
     <View style={styles.screen}>
-      <FlowHeader insetTop={insets.top} title={t('selectPet.title')} />
+      <FlowHeader elevatedBack insetTop={insets.top} title={t('selectPet.title')} />
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"

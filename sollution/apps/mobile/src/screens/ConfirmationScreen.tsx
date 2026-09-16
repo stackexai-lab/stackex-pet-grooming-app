@@ -49,7 +49,7 @@ export function ConfirmationScreen() {
 
   return (
     <View style={styles.screen}>
-      <FlowHeader insetTop={insets.top} title={t('confirmation.title')} />
+      <FlowHeader elevatedBack insetTop={insets.top} title={t('confirmation.title')} />
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, theme.spacing.xxl) }]}
         showsVerticalScrollIndicator={false}
