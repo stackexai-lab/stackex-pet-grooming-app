@@ -40,22 +40,38 @@ export function LanguageProvider({ children }: PropsWithChildren) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let active = true;
+    const handleLanguageChanged = (language: string) => {
+      const nextLocale = normalizeLocale(language) ?? defaultLocale;
+      setLocaleState(nextLocale);
+      applyDocumentLanguage(nextLocale);
+    };
+    i18nInstance.on('languageChanged', handleLanguageChanged);
+
     const nextLocale = loadLocale();
     void i18nInstance.changeLanguage(nextLocale).then(() => {
+      if (!active) return;
       applyDocumentLanguage(nextLocale);
       setLocaleState(nextLocale);
       setReady(true);
     });
+    return () => {
+      active = false;
+      i18nInstance.off('languageChanged', handleLanguageChanged);
+    };
   }, []);
 
   const setLocale = async (nextLocale: Locale) => {
-    await i18nInstance.changeLanguage(nextLocale);
-    applyDocumentLanguage(nextLocale);
-    setLocaleState(nextLocale);
     window.localStorage.setItem(storageKey, nextLocale);
+    await i18nInstance.changeLanguage(nextLocale);
+    setLocaleState(nextLocale);
+    applyDocumentLanguage(nextLocale);
   };
 
   const value = useMemo(() => ({ locale, isRTL: locale === 'ar', ready, setLocale }), [locale, ready]);
+
+  if (!ready) return null;
+
   return (
     <I18nextProvider i18n={i18nInstance}>
       <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>

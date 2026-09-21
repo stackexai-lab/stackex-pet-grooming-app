@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
-  I18nManager,
   Image,
   Modal,
   Platform,
@@ -18,14 +17,16 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BookingProgress } from '@/components/BookingProgress';
-import { CenterHeader } from '@/components/CenterHeader';
+import { FlowHeader } from '@/components/FlowHeader';
 import { cardShadow } from '@/components/ServiceCard';
+import { useLanguage } from '@/i18n';
 import { serviceAddons, serviceDetailCopy } from '@/mocks/serviceDetails';
 import { groomingServices } from '@/mocks/services';
 import { createStyles, useTheme, type Theme } from '@/theme';
 
 export function ServiceDetailsScreen() {
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
@@ -47,7 +48,7 @@ export function ServiceDetailsScreen() {
     .filter((addon) => addonIds.includes(addon.id))
     .reduce((sum, addon) => sum + addon.price, 0);
   const total = copy.price + addonTotal;
-  const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
+  const forward = isRTL ? 'arrow-back' : 'arrow-forward';
   const bookingParams = {
     serviceId: service.id,
     addons: addonIds.join(','),
@@ -110,10 +111,10 @@ export function ServiceDetailsScreen() {
 
   return (
     <View style={styles.screen}>
-      <CenterHeader
+      <FlowHeader
         elevatedBack
+        fitTitle
         insetTop={insets.top}
-        profile
         title={t('serviceDetails.title')}
       />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>

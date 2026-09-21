@@ -20,25 +20,43 @@ export function SuccessScreen() {
   const totalLabel = `${t('confirmation.money', { value: paymentMock.total.toFixed(2) })}`;
 
   return (
-    <View style={[styles.screen, { paddingBottom: Math.max(insets.bottom, theme.spacing.md), paddingTop: insets.top + theme.spacing.lg }]}>
+    <View
+      style={[
+        styles.screen,
+        {
+          paddingBottom: Math.max(insets.bottom, theme.spacing.md),
+          paddingTop: insets.top + theme.spacing.lg,
+        },
+      ]}
+    >
       <View style={styles.content}>
-      
         <View style={styles.hero}>
           <View style={styles.badgeWrap}>
             <View style={styles.glowDotOne} />
             <View style={styles.glowDotTwo} />
             <View style={styles.glowDotThree} />
             <View style={styles.glowDotFour} />
+
             <View style={styles.badgeRing}>
               <View style={styles.badge}>
-                <MaterialIcons color={theme.colors.primaryText} name="check" size={34} />
+                <MaterialIcons
+                  color={theme.colors.primaryText}
+                  name="check"
+                  size={34}
+                />
               </View>
             </View>
           </View>
 
           <View style={styles.completed}>
-            <MaterialIcons color={theme.colors.onSecondaryContainer} name="verified" size={14} />
-            <Text style={styles.completedLabel}>{t('success.paymentCompleted')}</Text>
+            <MaterialIcons
+              color={theme.colors.onSecondaryContainer}
+              name="verified"
+              size={14}
+            />
+            <Text style={styles.completedLabel}>
+              {t('success.paymentCompleted')}
+            </Text>
           </View>
 
           <Text style={styles.headline}>{t('success.headline')}</Text>
@@ -46,57 +64,102 @@ export function SuccessScreen() {
 
         <View style={styles.summaryCard}>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>BOOKING REFERENCE</Text>
+            <Text style={styles.summaryLabel}>
+              {t('success.bookingReference')}
+            </Text>
+
             <View style={styles.paid}>
               <Text style={styles.paidLabel}>{t('success.paid')}</Text>
             </View>
           </View>
 
-          <Text style={styles.orderMeta}>{t('success.order', { id: paymentMock.orderId })}</Text>
+          <Text style={styles.orderMeta}>
+            {t('success.order', { id: paymentMock.orderId })}
+          </Text>
 
           <View style={styles.serviceSection}>
-            <Text style={styles.serviceHeader}>SCHEDULED SERVICES</Text>
+            <Text style={styles.serviceHeader}>
+              {t('success.scheduledServices')}
+            </Text>
 
             {confirmationBookings.map((booking) => (
               <View key={booking.id} style={styles.serviceRow}>
                 <View style={styles.petMeta}>
                   <View style={styles.petIconWrap}>
-                    <MaterialIcons color={theme.colors.primary} name={booking.serviceIcon === 'spa' ? 'spa' : 'pets'} size={18} />
+                    <MaterialIcons
+                      color={theme.colors.primary}
+                      name={booking.serviceIcon === 'spa' ? 'spa' : 'pets'}
+                      size={18}
+                    />
                   </View>
+
                   <View style={styles.serviceText}>
                     <Text style={styles.petName}>{booking.name}</Text>
-                    <Text style={styles.serviceName}>{t(booking.serviceKey)}</Text>
+                    <Text style={styles.serviceName}>
+                      {t(booking.serviceKey)}
+                    </Text>
                   </View>
                 </View>
-                <Text style={styles.price}>{t('confirmation.money', { value: booking.servicePrice.toFixed(2) })}</Text>
+
+                <Text style={styles.price}>
+                  {t('confirmation.money', {
+                    value: booking.servicePrice.toFixed(2),
+                  })}
+                </Text>
               </View>
             ))}
           </View>
 
           <View style={styles.infoList}>
             <View style={styles.infoRow}>
-              <MaterialIcons color={theme.colors.textSecondary} name="event" size={18} />
-              <Text style={styles.infoText}>Sat, Oct 20, 2024 · 2:30 PM (90 mins)</Text>
+              <MaterialIcons
+                color={theme.colors.textSecondary}
+                name="event"
+                size={18}
+              />
+              <Text style={styles.infoText}>
+                {t('success.scheduleDetails')}
+              </Text>
             </View>
+
             <View style={styles.infoRow}>
-              <MaterialIcons color={theme.colors.textSecondary} name="location-on" size={18} />
-              <Text style={styles.infoText}>PawCare Studio • Downtown Sanctuary</Text>
+              <MaterialIcons
+                color={theme.colors.textSecondary}
+                name="location-on"
+                size={18}
+              />
+              <Text style={styles.infoText}>{t('success.location')}</Text>
             </View>
           </View>
 
           <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total</Text>
+            <Text style={styles.totalLabel}>{t('success.total')}</Text>
             <Text style={styles.totalValue}>{totalLabel}</Text>
           </View>
         </View>
 
-        <View style={[styles.actions, { paddingBottom: Math.max(insets.bottom, theme.spacing.sm) }]}>
+        <View
+          style={[
+            styles.actions,
+            { paddingBottom: Math.max(insets.bottom, theme.spacing.sm) },
+          ]}
+        >
           <Pressable
             onPress={() => router.push('/booking-history')}
-            style={({ pressed }) => [styles.history, pressed && styles.pressed]}
+            style={({ pressed }) => [
+              styles.history,
+              pressed && styles.pressed,
+            ]}
           >
-            <Text style={styles.historyLabel}>{t('success.orderHistory')}</Text>
-            <MaterialIcons color={theme.colors.primaryText} name={forward} size={18} />
+            <Text style={styles.historyLabel}>
+              {t('success.orderHistory')}
+            </Text>
+
+            <MaterialIcons
+              color={theme.colors.primaryText}
+              name={forward}
+              size={18}
+            />
           </Pressable>
 
           <Pressable

@@ -34,7 +34,7 @@ export function ProfileScreen() {
 
   return (
     <View style={styles.screen}>
-      <AppHeader insetTop={insets.top} />
+      <AppHeader insetTop={insets.top} showProfile={false} />
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: theme.spacing.xl }]}
         showsVerticalScrollIndicator={false}

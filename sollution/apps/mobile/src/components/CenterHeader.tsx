@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
 import { useLanguage } from '@/i18n';
+import { HeaderBrand } from './HeaderBrand';
 import { createStyles, useTheme, type Theme } from '@/theme';
 
 type CenterHeaderProps = {
@@ -41,13 +42,7 @@ export function CenterHeader({ insetTop, title, plain, elevatedBack, profile }: 
         </Pressable>
         <Text numberOfLines={1} style={styles.title}>{title}</Text>
         {profile ? (
-          <Pressable
-            accessibilityLabel={t('home.profile')}
-            accessibilityRole="button"
-            style={({ pressed }) => [styles.avatar, pressed && styles.pressed]}
-          >
-            <MaterialIcons color={theme.colors.primaryText} name="person" size={18} />
-          </Pressable>
+          <HeaderBrand />
         ) : (
           <View style={styles.spacer} />
         )}

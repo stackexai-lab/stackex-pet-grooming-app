@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { I18nManager, Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -8,11 +8,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BookingProgress } from '@/components/BookingProgress';
 import { FlowHeader } from '@/components/FlowHeader';
 import { ServicePackageCard } from '@/components/ServicePackageCard';
+import { useLanguage } from '@/i18n';
 import { groomingServices } from '@/mocks/services';
 import { createStyles, useTheme, type Theme } from '@/theme';
 
 export function SelectServiceScreen() {
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
@@ -21,7 +23,7 @@ export function SelectServiceScreen() {
   const browse = isBrowseParam(params.browse);
   const [selectedId, setSelectedId] = useState(groomingServices[0].id);
   const selected = groomingServices.find((service) => service.id === selectedId) ?? groomingServices[0];
-  const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
+  const forward = isRTL ? 'arrow-back' : 'arrow-forward';
 
   function openDetails(serviceId: string) {
     router.push({
@@ -32,7 +34,7 @@ export function SelectServiceScreen() {
 
   return (
     <View style={styles.screen}>
-      <FlowHeader elevatedBack insetTop={insets.top} title={t('selectService.title')} />
+      <FlowHeader elevatedBack fitTitle insetTop={insets.top} title={t('selectService.title')} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {browse ? null : (
           <BookingProgress

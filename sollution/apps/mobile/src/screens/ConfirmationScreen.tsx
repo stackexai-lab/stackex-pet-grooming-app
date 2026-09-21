@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { I18nManager, Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -45,11 +45,11 @@ export function ConfirmationScreen() {
   }).format(arrivalWithSlot)}`;
   const pets = confirmationBookings.map((booking) => booking.name).join(' & ');
   const total = t('confirmation.money', { value: confirmationLogistics.total.toFixed(2) });
-  const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
+  const forward = 'arrow-back';
 
   return (
     <View style={styles.screen}>
-      <FlowHeader elevatedBack insetTop={insets.top} title={t('confirmation.title')} />
+      <FlowHeader elevatedBack fitTitle insetTop={insets.top} title={t('confirmation.title')} />
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, theme.spacing.xxl) }]}
         showsVerticalScrollIndicator={false}

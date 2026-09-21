@@ -51,7 +51,7 @@ export function BookingProgress({
           </Text>
         </View>
         {segments ? (
-          <View style={styles.segments}>
+          <View style={[styles.segments, { direction: isRTL ? 'rtl' : 'ltr' }]}>
             {Array.from({ length: total }, (_, index) => {
               const active = index === current - 1;
               return (
@@ -67,13 +67,12 @@ export function BookingProgress({
         ) : null}
       </View>
       {segments ? null : (
-        <View style={styles.track}>
+        <View style={[styles.track, { direction: isRTL ? 'rtl' : 'ltr' }]}>
           <View
             style={[
               styles.fill,
               plain && styles.fillPlain,
               { width: `${progress * 100}%` },
-              isRTL && styles.fillRtl,
             ]}
           />
         </View>
@@ -141,15 +140,13 @@ function progressStyles(theme: Theme) {
       width: '100%',
     },
     fill: {
+      alignSelf: 'flex-start',
       backgroundColor: t.colors.primaryContainer,
       borderRadius: t.radii.pill,
       height: '100%',
     },
     fillPlain: {
       backgroundColor: t.colors.primary,
-    },
-    fillRtl: {
-      alignSelf: 'flex-end',
     },
     segments: {
       alignItems: 'center',

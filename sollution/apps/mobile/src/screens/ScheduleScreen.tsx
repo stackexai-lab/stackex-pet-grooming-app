@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,20 @@ export function ScheduleScreen() {
   const styles = useMemo(() => scheduleStyles(theme), [theme]);
   const [selectedDay, setSelectedDay] = useState(defaultScheduleSelection.day.getTime());
   const [selectedSlotId, setSelectedSlotId] = useState(defaultScheduleSelection.slotId);
+  const [savedAddress, setSavedAddress] = useState<string | null>(null);
+  const [draftAddress, setDraftAddress] = useState('');
+  const [addressModalVisible, setAddressModalVisible] = useState(false);
+  const address = savedAddress ?? t('profilePage.address');
+
+  const openAddressEditor = () => {
+    setDraftAddress(address);
+    setAddressModalVisible(true);
+  };
+
+  const saveAddress = () => {
+    setSavedAddress(draftAddress.trim() || address);
+    setAddressModalVisible(false);
+  };
 
   const selectedDate = scheduleDays.find((day) => day.getTime() === selectedDay) ?? defaultScheduleSelection.day;
   const selectedSlot = scheduleSlots.find((slot) => slot.id === selectedSlotId) ?? scheduleSlots[9];
@@ -34,26 +48,35 @@ export function ScheduleScreen() {
   const calendarDays = getCalendarDays(visibleMonth);
 
   return (
-    <View style={styles.screen}>
-      <FlowHeader brandedLogo elevatedBack insetTop={insets.top} title={t('schedule.title')} />
+    <KeyboardAvoidingView
+  style={styles.screen}
+  behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+>
+      <FlowHeader brandedLogo elevatedBack fitTitle insetTop={insets.top} title={t('schedule.title')} />
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, theme.spacing.xl) }]}
+        style={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + theme.spacing.xl }]}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.sectionLabel}>Choose date</Text>
+        <Text style={styles.sectionLabel}>{t('schedule.chooseDate')}</Text>
         <View style={styles.calendarCard}>
           <View style={styles.monthRow}>
             <Pressable accessibilityLabel="Previous month" disabled={!hasAvailableMonth(visibleMonth, -1)} onPress={() => setVisibleMonth(addMonths(visibleMonth, -1))} style={styles.monthControl}>
-              <MaterialIcons color={theme.colors.textMuted} name="chevron-left" size={22} />
+              <MaterialIcons color={theme.colors.textMuted} name={locale === 'ar' ? 'chevron-right' : 'chevron-left'} size={22} />
             </Pressable>
             <Text style={styles.monthLabel}>{new Intl.DateTimeFormat(locale, { month: 'long' }).format(visibleMonth)}</Text>
             <Text style={styles.yearLabel}>{visibleMonth.getFullYear()}</Text>
             <Pressable accessibilityLabel="Next month" disabled={!hasAvailableMonth(visibleMonth, 1)} onPress={() => setVisibleMonth(addMonths(visibleMonth, 1))} style={styles.monthControl}>
-              <MaterialIcons color={theme.colors.textMuted} name="chevron-right" size={22} />
+              <MaterialIcons color={theme.colors.textMuted} name={locale === 'ar' ? 'chevron-left' : 'chevron-right'} size={22} />
             </Pressable>
           </View>
           <View style={styles.weekRow}>
-            {['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'].map((day) => <Text key={day} style={styles.weekday}>{day}</Text>)}
+            {['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'].map((day, index) => (
+              <Text key={day} style={styles.weekday}>
+                {locale === 'ar' ? new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(calendarDays[index]) : day}
+              </Text>
+            ))}
           </View>
           <View style={styles.calendarGrid}>
             {calendarDays.map((day) => {
@@ -68,7 +91,7 @@ export function ScheduleScreen() {
             })}
           </View>
         </View>
-        <Text style={styles.sectionLabel}>Choose time</Text>
+        <Text style={styles.sectionLabel}>{t('schedule.chooseTime')}</Text>
         <View style={styles.timeCard}>
           <TimeScroller locale={locale} selectedSlotId={selectedSlot.id} onSelect={setSelectedSlotId} styles={styles} theme={theme} />
         </View>
@@ -81,9 +104,9 @@ export function ScheduleScreen() {
         <View style={styles.addressCard}>
           <View style={styles.addressCopy}>
             <Text style={styles.addressLabel}>{t('profilePage.groomingAddress')}</Text>
-            <Text style={styles.addressValue}>{t('profilePage.address')}</Text>
+            <Text style={styles.addressValue}>{address}</Text>
           </View>
-          <Pressable accessibilityRole="button" onPress={() => router.push('/profile')} style={styles.addressEdit}>
+          <Pressable accessibilityRole="button" onPress={openAddressEditor} style={styles.addressEdit}>
             <Text style={styles.addressEditLabel}>{t('profilePage.edit')}</Text>
           </Pressable>
         </View>
@@ -101,7 +124,31 @@ export function ScheduleScreen() {
           <MaterialIcons color={theme.colors.primaryText} name={forwardIcon} size={20} />
         </Pressable>
       </ScrollView>
-    </View>
+      <Modal animationType="slide" transparent visible={addressModalVisible} onRequestClose={() => setAddressModalVisible(false)}>
+        <Pressable style={styles.modalBackdrop} onPress={() => setAddressModalVisible(false)}>
+          <Pressable style={styles.modalCard} onPress={(event) => event.stopPropagation()}>
+            <Text style={styles.modalTitle}>{t('profilePage.editAddress')}</Text>
+            <TextInput
+              autoFocus
+              multiline
+              onChangeText={setDraftAddress}
+              placeholder={t('profilePage.addressPlaceholder')}
+              placeholderTextColor={theme.colors.textMuted}
+              style={styles.addressInput}
+              value={draftAddress}
+            />
+            <View style={styles.modalActions}>
+              <Pressable onPress={() => setAddressModalVisible(false)} style={styles.modalSecondary}>
+                <Text style={styles.modalSecondaryLabel}>{t('cancel')}</Text>
+              </Pressable>
+              <Pressable onPress={saveAddress} style={styles.modalPrimary}>
+                <Text style={styles.modalPrimaryLabel}>{t('save')}</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -310,15 +357,82 @@ function scheduleStyles(theme: Theme) {
       textTransform: 'uppercase',
     },
     addressValue: {
-      color: t.colors.ink,
-      fontFamily: t.typography.fontFamilies.body,
-      fontSize: 13,
-      lineHeight: 18,
-      marginTop: 3,
-    },
+  color: t.colors.ink,
+  fontFamily: t.typography.fontFamilies.body,
+  fontSize: 13,
+  lineHeight: 18,
+  marginTop: 3,
+  minHeight: 36,
+},
     addressEdit: {
       paddingHorizontal: 4,
       paddingVertical: 6,
+    },
+    modalBackdrop: {
+      backgroundColor: 'rgba(15, 23, 42, 0.28)',
+      flex: 1,
+      justifyContent: 'flex-end',
+    },
+    modalCard: {
+      backgroundColor: t.colors.background,
+      borderTopLeftRadius: t.radii.card,
+      borderTopRightRadius: t.radii.card,
+      paddingBottom: 28,
+      paddingHorizontal: t.spacing.gutter,
+      paddingTop: 22,
+    },
+    modalTitle: {
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: 18,
+      lineHeight: 24,
+      marginBottom: 14,
+    },
+    addressInput: {
+      backgroundColor: t.colors.surface,
+      borderColor: t.colors.border,
+      borderRadius: t.radii.input,
+      borderWidth: 1,
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.body,
+      fontSize: 14,
+      minHeight: 88,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      textAlignVertical: 'top',
+    },
+    modalActions: {
+      flexDirection: 'row',
+      gap: t.spacing.sm,
+      marginTop: 16,
+    },
+    modalSecondary: {
+      alignItems: 'center',
+      backgroundColor: t.colors.surface,
+      borderColor: t.colors.border,
+      borderRadius: t.radii.button,
+      borderWidth: 1,
+      flex: 1,
+      justifyContent: 'center',
+      minHeight: 46,
+    },
+    modalSecondaryLabel: {
+      color: t.colors.ink,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: 14,
+    },
+    modalPrimary: {
+      alignItems: 'center',
+      backgroundColor: t.colors.primary,
+      borderRadius: t.radii.button,
+      flex: 1,
+      justifyContent: 'center',
+      minHeight: 46,
+    },
+    modalPrimaryLabel: {
+      color: t.colors.primaryText,
+      fontFamily: t.typography.fontFamilies.bodyMedium,
+      fontSize: 14,
     },
     addressEditLabel: {
       color: t.colors.primary,

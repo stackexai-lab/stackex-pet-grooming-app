@@ -1,4 +1,5 @@
 import { I18nManager, View } from 'react-native';
+import { reloadAppAsync } from 'expo';
 import { getLocales } from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { I18nextProvider } from 'react-i18next';
@@ -39,26 +40,46 @@ export function LanguageProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     let active = true;
+    const handleLanguageChanged = (language: string) => {
+      setLocaleState(normalizeLocale(language) ?? defaultLocale);
+    };
+    i18nInstance.on('languageChanged', handleLanguageChanged);
+
     void loadLocale().then(async (nextLocale) => {
       if (!active) return;
       await i18nInstance.changeLanguage(nextLocale);
+      if (!active) return;
       I18nManager.allowRTL(nextLocale === 'ar');
       I18nManager.forceRTL(nextLocale === 'ar');
       setLocaleState(nextLocale);
       setReady(true);
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+      i18nInstance.off('languageChanged', handleLanguageChanged);
+    };
   }, []);
 
   const setLocale = async (nextLocale: Locale) => {
+    const directionChanged = (locale === 'ar') !== (nextLocale === 'ar');
+    await AsyncStorage.setItem(storageKey, nextLocale);
     await i18nInstance.changeLanguage(nextLocale);
+    setLocaleState(nextLocale);
     I18nManager.allowRTL(nextLocale === 'ar');
     I18nManager.forceRTL(nextLocale === 'ar');
-    setLocaleState(nextLocale);
-    await AsyncStorage.setItem(storageKey, nextLocale);
+
+    if (directionChanged) {
+      try {
+        await reloadAppAsync();
+      } catch {
+        // Keep the selected language even when the native app cannot reload.
+      }
+    }
   };
 
   const value = useMemo(() => ({ locale, isRTL: locale === 'ar', ready, setLocale }), [locale, ready]);
+
+  if (!ready) return null;
 
   return (
     <I18nextProvider i18n={i18nInstance}>

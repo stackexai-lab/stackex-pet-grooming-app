@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BottomTabBar } from '@/components/BottomTabBar';
+import { HeaderBrand } from '@/components/HeaderBrand';
 import { useLanguage } from '@/i18n';
 import { bookingHistory } from '@/mocks/bookings';
 import { createStyles, useTheme, type Theme } from '@/theme';
@@ -35,9 +36,7 @@ export function BookingHistoryScreen() {
             <MaterialIcons color={theme.colors.ink} name={backIcon} size={20} />
           </Pressable>
           <Text style={styles.title}>{t('history.title')}</Text>
-          <Pressable style={styles.profileButton}>
-            <MaterialIcons color={theme.colors.primaryText} name="person" size={18} />
-          </Pressable>
+          <HeaderBrand />
         </View>
 
         <View style={styles.segmented}>
@@ -219,11 +218,11 @@ function historyStyles(theme: Theme) {
     },
     profileButton: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
-      borderRadius: 14,
-      height: 34,
+      backgroundColor: t.colors.primary,
+      borderRadius: t.radii.pill,
+      height: 32,
       justifyContent: 'center',
-      width: 34,
+      width: 32,
     },
     segmented: {
       backgroundColor: '#ECECEB',

@@ -3,7 +3,6 @@ import {
   Alert,
   Animated,
   Easing,
-  I18nManager,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -22,6 +21,7 @@ import { AddPetForm, type NewPetDraft } from '@/components/AddPetForm';
 import { BookingProgress } from '@/components/BookingProgress';
 import { FlowHeader } from '@/components/FlowHeader';
 import { PetSelectCard } from '@/components/PetSelectCard';
+import { useLanguage } from '@/i18n';
 import { initialPets, type Pet } from '@/mocks/pets';
 import { createStyles, useTheme, type Theme } from '@/theme';
 
@@ -34,6 +34,7 @@ const emptyDraft: NewPetDraft = {
 
 export function SelectPetScreen() {
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { height: windowHeight } = useWindowDimensions();
@@ -44,7 +45,7 @@ export function SelectPetScreen() {
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState<NewPetDraft>(emptyDraft);
   const canSavePet = draft.name.trim().length > 0;
-  const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
+  const forward = isRTL ? 'arrow-back' : 'arrow-forward';
   const sheetHeight = Math.round(windowHeight * 0.76);
   const dim = useRef(new Animated.Value(0)).current;
   const slide = useRef(new Animated.Value(1)).current;
@@ -139,7 +140,7 @@ export function SelectPetScreen() {
 
   return (
     <View style={styles.screen}>
-      <FlowHeader elevatedBack insetTop={insets.top} title={t('selectPet.title')} />
+      <FlowHeader elevatedBack fitTitle insetTop={insets.top} title={t('selectPet.title')} />
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"

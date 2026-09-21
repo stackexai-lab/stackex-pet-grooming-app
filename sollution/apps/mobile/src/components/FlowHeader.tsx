@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
 import { useLanguage } from '@/i18n';
-import { homeImages } from '@/mocks/home';
+import { HeaderBrand } from './HeaderBrand';
 import { createStyles, useTheme, type Theme } from '@/theme';
 
 type FlowHeaderProps = {
@@ -14,9 +14,10 @@ type FlowHeaderProps = {
   dashedBack?: boolean;
   elevatedBack?: boolean;
   brandedLogo?: boolean;
+  fitTitle?: boolean;
 };
 
-export function FlowHeader({ insetTop, title, dashedBack, elevatedBack, brandedLogo }: FlowHeaderProps) {
+export function FlowHeader({ insetTop, title, dashedBack, elevatedBack, fitTitle }: FlowHeaderProps) {
   const { t } = useTranslation();
   const { isRTL } = useLanguage();
   const router = useRouter();
@@ -44,22 +45,13 @@ export function FlowHeader({ insetTop, title, dashedBack, elevatedBack, brandedL
               <MaterialIcons color={theme.colors.ink} name={backIcon} size={20} />
             </Pressable>
           </View>
-          {brandedLogo ? (
-            <View style={styles.logoMark}>
-              <Image source={homeImages.logo} style={styles.logoBadge} resizeMode="contain" />
-            </View>
-          ) : (
-            <Image source={homeImages.logo} style={styles.logo} resizeMode="contain" />
-          )}
-          <Text numberOfLines={1} style={styles.title}>{title}</Text>
+          <Text
+            adjustsFontSizeToFit={fitTitle && isRTL}
+            numberOfLines={1}
+            style={[styles.title, fitTitle && isRTL && { letterSpacing: 0, lineHeight: undefined }]}
+          >{title}</Text>
         </View>
-        <Pressable
-          accessibilityLabel={t('home.profile')}
-          accessibilityRole="button"
-          style={({ pressed }) => [styles.avatar, pressed && styles.pressed]}
-        >
-          <MaterialIcons color={theme.colors.primaryText} name="person" size={20} />
-        </Pressable>
+        <HeaderBrand />
       </View>
     </View>
   );
@@ -150,9 +142,9 @@ function flowHeaderStyles(theme: Theme) {
       alignItems: 'center',
       backgroundColor: t.colors.primary,
       borderRadius: t.radii.pill,
-      height: 36,
+      height: 32,
       justifyContent: 'center',
-      width: 36,
+      width: 32,
     },
     pressed: {
       opacity: 0.85,
