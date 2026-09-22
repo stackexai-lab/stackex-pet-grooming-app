@@ -122,7 +122,7 @@ export function HomeScreen() {
             <Pressable
               accessibilityRole="button"
               onPress={() => router.push('/select-pet')}
-              style={({ pressed }) => [styles.book, pressed && styles.bookPressed]}
+              style={styles.book}
             >
               <MaterialIcons color={theme.colors.primaryText} name="event" size={20} />
               <Text style={styles.bookLabel}>{t('home.bookGrooming')}</Text>
@@ -364,17 +364,13 @@ function homeStyles(theme: Theme) {
     },
     book: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flex: 1,
       flexDirection: 'row',
       gap: t.spacing.sm,
       height: t.spacing.control,
       justifyContent: 'center',
-    },
-    bookPressed: {
-      backgroundColor: t.colors.primary,
-      transform: [{ scale: 0.98 }],
     },
     bookLabel: {
       color: t.colors.primaryText,

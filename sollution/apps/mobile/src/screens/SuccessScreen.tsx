@@ -184,7 +184,7 @@ export function SuccessScreen() {
 function successStyles(theme: Theme) {
   return createStyles((t) => ({
     screen: {
-      backgroundColor: '#F3F3F3',
+      backgroundColor: t.colors.background,
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: 20,
@@ -210,7 +210,7 @@ function successStyles(theme: Theme) {
     },
     brandIcon: {
       alignItems: 'center',
-      backgroundColor: '#F8E4D2',
+      backgroundColor: t.colors.primaryFixed,
       borderRadius: 12,
       height: 26,
       justifyContent: 'center',
@@ -317,7 +317,7 @@ function successStyles(theme: Theme) {
       textAlign: 'center',
     },
     summaryCard: {
-      backgroundColor: '#F2F4F6',
+      backgroundColor: t.colors.surfaceSecondary,
       borderRadius: 18,
       marginTop: 20,
       paddingHorizontal: 16,
@@ -340,13 +340,13 @@ function successStyles(theme: Theme) {
     },
     paid: {
       alignItems: 'center',
-      backgroundColor: '#E7EFEA',
+      backgroundColor: t.colors.secondaryContainer,
       borderRadius: 999,
       paddingHorizontal: 10,
       paddingVertical: 4,
     },
     paidLabel: {
-      color: '#3A6A5B',
+      color: t.colors.onSecondaryContainer,
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: 10,
       letterSpacing: 0.7,
@@ -361,7 +361,7 @@ function successStyles(theme: Theme) {
       marginTop: 10,
     },
     serviceSection: {
-      backgroundColor: '#F8F8F8',
+      backgroundColor: t.colors.surface,
       borderRadius: 14,
       marginTop: 14,
       padding: 12,
@@ -389,7 +389,7 @@ function successStyles(theme: Theme) {
     },
     petIconWrap: {
       alignItems: 'center',
-      backgroundColor: '#F8E4D2',
+      backgroundColor: t.colors.primaryFixed,
       borderRadius: 12,
       height: 28,
       justifyContent: 'center',
@@ -439,7 +439,7 @@ function successStyles(theme: Theme) {
     },
     totalRow: {
       alignItems: 'center',
-      backgroundColor: '#EDF5F1',
+      backgroundColor: t.colors.successSurfaceSoft,
       borderRadius: 12,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -461,7 +461,7 @@ function successStyles(theme: Theme) {
     },
     history: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: 18,
       flexDirection: 'row',
       gap: 10,

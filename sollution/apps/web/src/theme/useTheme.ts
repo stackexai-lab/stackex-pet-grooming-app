@@ -19,7 +19,7 @@ function setSelection(selection: ThemeSelection) {
 }
 
 export function setTheme(selection: ThemeSelection) { setSelection(selection); }
-export function setVariation(variation: string) { setSelection({ ...store.selection, variation }); }
+export function setVariation(variation: string) { setSelection({ variation, paletteId: store.selection.paletteId }); }
 export function setPaletteId(paletteId: string) { setSelection({ ...store.selection, paletteId }); }
 
 export function hydrateTheme() {

@@ -141,7 +141,7 @@ function progressStyles(theme: Theme) {
     },
     fill: {
       alignSelf: 'flex-start',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.pill,
       height: '100%',
     },

@@ -108,7 +108,7 @@ function petCardStyles(theme: Theme) {
       padding: t.spacing.md,
     },
     cardSelected: {
-      borderColor: t.colors.primaryContainer,
+      borderColor: t.colors.primary,
       borderWidth: 2,
       elevation: 6,
       padding: t.spacing.md - 1,
@@ -210,7 +210,7 @@ function petCardStyles(theme: Theme) {
       width: 28,
     },
     checkOn: {
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
     },
     checkOff: {
       backgroundColor: t.colors.surfaceHigh,

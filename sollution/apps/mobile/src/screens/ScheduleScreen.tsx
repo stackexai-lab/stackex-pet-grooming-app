@@ -174,6 +174,7 @@ function TimeScroller({ locale, selectedSlotId, onSelect, styles, theme }: { loc
     contentOffset={{ x: 0, y: selectedIndex * TIME_ROW_HEIGHT }}
     contentContainerStyle={styles.timeScrollerContent}
     decelerationRate="fast"
+    nestedScrollEnabled
     onScroll={(event) => selectFocusedSlot(event.nativeEvent.contentOffset.y)}
     showsVerticalScrollIndicator={false}
     snapToInterval={TIME_ROW_HEIGHT}
@@ -283,7 +284,7 @@ function scheduleStyles(theme: Theme) {
       width: '14.2857%',
     },
     calendarDaySelected: {
-      backgroundColor: t.colors.primary,
+      backgroundColor: t.colors.primaryContainer,
       borderRadius: t.radii.pill,
     },
     calendarDayLabel: {
@@ -300,7 +301,7 @@ function scheduleStyles(theme: Theme) {
       opacity: 0.4,
     },
     calendarDaySelectedLabel: {
-      color: t.colors.primaryText,
+      color: t.colors.primary,
       fontFamily: t.typography.fontFamilies.bodyBold,
     },
     timeCard: {
@@ -369,7 +370,7 @@ function scheduleStyles(theme: Theme) {
       paddingVertical: 6,
     },
     modalBackdrop: {
-      backgroundColor: 'rgba(15, 23, 42, 0.28)',
+      backgroundColor: t.colors.modalBackdrop,
       flex: 1,
       justifyContent: 'flex-end',
     },
@@ -423,7 +424,7 @@ function scheduleStyles(theme: Theme) {
     },
     modalPrimary: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flex: 1,
       justifyContent: 'center',
@@ -442,7 +443,7 @@ function scheduleStyles(theme: Theme) {
     },
     continue: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       elevation: 3,
       flexDirection: 'row',

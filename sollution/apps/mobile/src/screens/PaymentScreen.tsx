@@ -73,7 +73,7 @@ export function PaymentScreen() {
                   underlineColorAndroid="transparent"
                   value={number}
                 />
-                <MaterialIcons color={theme.colors.primaryContainer} name="credit-card" size={20} />
+                <MaterialIcons color={theme.colors.primary} name="credit-card" size={20} />
               </View>
             </Field>
 
@@ -324,7 +324,7 @@ function paymentStyles(theme: Theme) {
     },
     pay: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       justifyContent: 'space-between',

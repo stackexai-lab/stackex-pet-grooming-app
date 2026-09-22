@@ -200,7 +200,7 @@ function selectServiceStyles(theme: Theme) {
     },
     continue: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       gap: t.spacing.sm,

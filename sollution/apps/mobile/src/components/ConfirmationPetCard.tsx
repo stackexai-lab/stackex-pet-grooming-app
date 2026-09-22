@@ -25,7 +25,7 @@ export function ConfirmationPetCard({ booking }: ConfirmationPetCardProps) {
         <View style={styles.avatarWrap}>
           <Image source={booking.photo} style={styles.avatar} resizeMode="cover" />
           <View style={styles.petBadge}>
-            <MaterialIcons color={theme.colors.onSecondaryContainer} name="pets" size={10} />
+            <MaterialIcons color={theme.colors.secondary} name="pets" size={10} />
           </View>
         </View>
         <View style={styles.petCopy}>

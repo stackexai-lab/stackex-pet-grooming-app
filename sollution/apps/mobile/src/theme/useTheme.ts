@@ -34,7 +34,7 @@ export function setTheme(selection: ThemeSelection) {
 }
 
 export function setVariation(variation: string) {
-  setSelection({ ...store.selection, variation });
+  setSelection({ variation, paletteId: store.selection.paletteId });
 }
 
 export function setPaletteId(paletteId: string) {

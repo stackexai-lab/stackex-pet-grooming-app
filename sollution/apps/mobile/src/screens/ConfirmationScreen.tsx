@@ -125,7 +125,7 @@ function confirmationStyles(theme: Theme) {
       gap: t.spacing.md,
     },
     logistics: {
-      backgroundColor: t.colors.primaryFixedSoft,
+      backgroundColor: t.colors.secondaryFixedSoft,
       borderRadius: t.radii.card,
       marginTop: t.spacing.md,
       padding: t.spacing.gutter,
@@ -205,7 +205,7 @@ function confirmationStyles(theme: Theme) {
     },
     pay: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       gap: t.spacing.sm,

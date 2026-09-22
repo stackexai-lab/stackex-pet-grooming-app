@@ -340,7 +340,7 @@ function selectPetStyles(theme: Theme) {
     },
     continue: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       gap: t.spacing.sm,
@@ -406,7 +406,7 @@ function selectPetStyles(theme: Theme) {
     },
     sheetSave: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       gap: t.spacing.sm,

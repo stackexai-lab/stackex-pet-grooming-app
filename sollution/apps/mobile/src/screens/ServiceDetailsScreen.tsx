@@ -164,11 +164,7 @@ export function ServiceDetailsScreen() {
                 accessibilityState={{ checked: on }}
                 key={addon.id}
                 onPress={() => toggleAddon(addon.id)}
-                style={({ pressed }) => [
-                  styles.addon,
-                  on && styles.addonOn,
-                  pressed && styles.pressed,
-                ]}
+                style={styles.addon}
               >
                 <View style={styles.addonLead}>
                   <View style={[styles.check, on && styles.checkOn]}>
@@ -200,7 +196,7 @@ export function ServiceDetailsScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={() => router.push('/select-pet')}
-            style={({ pressed }) => [styles.browseBook, pressed && styles.selectPressed]}
+            style={styles.browseBook}
           >
             <MaterialIcons color={theme.colors.primaryText} name="event" size={20} />
             <Text style={styles.selectLabel}>{t('home.bookGrooming')}</Text>
@@ -215,7 +211,7 @@ export function ServiceDetailsScreen() {
           <Pressable
             accessibilityRole="button"
             onPress={openNextStep}
-            style={({ pressed }) => [styles.select, pressed && styles.selectPressed]}
+            style={styles.select}
           >
             <Text style={styles.selectLabel}>{t('serviceDetails.selectService')}</Text>
             <MaterialIcons color={theme.colors.primaryText} name={forward} size={20} />
@@ -417,9 +413,6 @@ function detailsStyles(theme: Theme) {
       padding: t.spacing.md,
       ...cardShadow(t.colors.overlay),
     },
-    addonOn: {
-      backgroundColor: t.colors.primaryFixedSoft,
-    },
     addonLead: {
       alignItems: 'center',
       flex: 1,
@@ -485,7 +478,7 @@ function detailsStyles(theme: Theme) {
     },
     browseBook: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       gap: t.spacing.sm,
@@ -508,16 +501,13 @@ function detailsStyles(theme: Theme) {
     },
     select: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flex: 1,
       flexDirection: 'row',
       gap: t.spacing.sm,
       height: t.spacing.control,
       justifyContent: 'center',
-    },
-    selectPressed: {
-      backgroundColor: t.colors.primary,
     },
     selectLabel: {
       color: t.colors.primaryText,
@@ -568,7 +558,7 @@ function detailsStyles(theme: Theme) {
     },
     sheetPrimary: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       gap: t.spacing.sm,

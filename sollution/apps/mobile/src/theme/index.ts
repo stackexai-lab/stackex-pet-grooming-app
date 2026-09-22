@@ -11,3 +11,4 @@ export {
   type Theme,
   type ThemeSelection,
 } from './variations';
+export { palettes, paletteIds, type PaletteId, type PaletteColors } from './palettes';

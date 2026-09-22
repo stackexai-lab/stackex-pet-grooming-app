@@ -1,37 +1,4 @@
-export const sageColors = {
-  background: '#F8F9FF',
-  surface: '#FFFFFF',
-  surfaceSecondary: '#F0F4FD',
-  ink: '#171C23',
-  textSecondary: '#554339',
-  textMuted: '#887367',
-  border: '#DBC1B4',
-  primary: '#994703',
-  primaryBorder: 'rgba(153, 71, 3, 0.3)',
-  primaryContainer: '#D97736',
-  primaryText: '#FFFFFF',
-  primaryFixed: '#FFDBC9',
-  primaryFixedSoft: 'rgba(255, 219, 201, 0.4)',
-  onPrimaryFixed: '#321200',
-  onPrimaryFixedVariant: '#753400',
-  secondary: '#446557',
-  secondaryContainer: '#C6EBD9',
-  onSecondaryContainer: '#4A6B5D',
-  onSecondaryFixedVariant: '#2D4D40',
-  tertiaryFixed: '#FFDCC3',
-  onTertiaryFixed: '#2F1500',
-  logoWash: '#FAF3E8',
-  surfaceHigh: '#E4E8F2',
-  surfaceContainer: '#EAEEF8',
-  surfaceVariant: '#DEE2EC',
-  badgeSoft: '#EDF3FA',
-  badgeSoftText: '#486581',
-  highlightBorder: 'rgba(96, 165, 250, 0.55)',
-  overlay: '#2C3138',
-  onOverlay: '#EDF1FB',
-  success: '#446557',
-  warning: '#B57937',
-  error: '#BA1A1A',
-} as const;
+import { palettes } from './palettes';
 
-export type ThemeColors = typeof sageColors;
+export type { PaletteColors as ThemeColors } from './palettes';
+export const sageColors = palettes.sage;

@@ -89,7 +89,7 @@ function tabBarStyles(theme: Theme) {
       lineHeight: t.typography.lineHeights.overline,
     },
     badge: {
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.pill,
       height: 8,
       position: 'absolute',

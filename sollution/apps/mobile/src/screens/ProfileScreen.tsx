@@ -6,19 +6,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '@/components/AppHeader';
 import { BottomTabBar } from '@/components/BottomTabBar';
-import { createStyles, defaultThemeSelection, setTheme, useTheme, type Theme } from '@/theme';
+import { createStyles, paletteIds, useTheme, type Theme } from '@/theme';
 import { useLanguage } from '@/i18n';
 
 export function ProfileScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { theme, setPaletteId } = useTheme();
   const { locale, setLocale } = useLanguage();
   const styles = useMemo(() => profileStyles(theme), [theme]);
   const [address, setAddress] = useState(t('profilePage.address'));
   const [draftAddress, setDraftAddress] = useState(address);
   const [modal, setModal] = useState<'address' | 'theme' | 'language' | null>(null);
-  const [themeMode, setThemeMode] = useState<'system' | 'pawcare'>('pawcare');
 
   const openAddressEditor = () => {
     setDraftAddress(address);
@@ -30,7 +29,11 @@ export function ProfileScreen() {
     setModal(null);
   };
 
-  const selectedTheme = themeMode === 'pawcare' ? t('profilePage.pawcare') : t('profilePage.system');
+  const paletteNames = {
+    sage: 'Sage',
+    'minimalist-mist': 'Minimalist Mist',
+  };
+  const selectedTheme = paletteNames[theme.paletteId];
 
   return (
     <View style={styles.screen}>
@@ -108,14 +111,18 @@ export function ProfileScreen() {
             ) : modal === 'theme' ? (
               <>
                 <Text style={styles.modalTitle}>{t('profilePage.chooseTheme')}</Text>
-                <Pressable onPress={() => { setThemeMode('pawcare'); setTheme(defaultThemeSelection); setModal(null); }} style={styles.optionRow}>
-                  <Text style={styles.optionLabel}>{t('profilePage.pawcare')}</Text>
-                  {themeMode === 'pawcare' && <MaterialIcons color={theme.colors.primary} name="check" size={20} />}
-                </Pressable>
-                <Pressable onPress={() => { setThemeMode('system'); setTheme(defaultThemeSelection); setModal(null); }} style={styles.optionRow}>
-                  <Text style={styles.optionLabel}>{t('profilePage.system')}</Text>
-                  {themeMode === 'system' && <MaterialIcons color={theme.colors.primary} name="check" size={20} />}
-                </Pressable>
+                {paletteIds.map((paletteId) => (
+                  <Pressable
+                    key={paletteId}
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: theme.paletteId === paletteId }}
+                    onPress={() => { setPaletteId(paletteId); setModal(null); }}
+                    style={[styles.optionRow, theme.paletteId === paletteId && styles.selectedPalette]}
+                  >
+                    <Text style={styles.optionLabel}>{paletteNames[paletteId]}</Text>
+                    {theme.paletteId === paletteId && <MaterialIcons color={theme.colors.primary} name="check" size={20} />}
+                  </Pressable>
+                ))}
               </>
             ) : (
               <>
@@ -230,7 +237,7 @@ function profileStyles(theme: Theme) {
       marginHorizontal: t.spacing.md,
     },
     modalBackdrop: {
-      backgroundColor: 'rgba(15, 23, 42, 0.28)',
+      backgroundColor: t.colors.modalBackdrop,
       flex: 1,
       justifyContent: 'flex-end',
     },
@@ -284,7 +291,7 @@ function profileStyles(theme: Theme) {
     },
     modalPrimary: {
       alignItems: 'center',
-      backgroundColor: t.colors.primaryContainer,
+      backgroundColor: t.colors.primary,
       borderRadius: t.radii.button,
       flex: 1,
       justifyContent: 'center',
@@ -302,6 +309,9 @@ function profileStyles(theme: Theme) {
       flexDirection: 'row',
       justifyContent: 'space-between',
       minHeight: 56,
+    },
+    selectedPalette: {
+      backgroundColor: t.colors.primaryFixedSoft,
     },
     optionLabel: {
       color: t.colors.ink,

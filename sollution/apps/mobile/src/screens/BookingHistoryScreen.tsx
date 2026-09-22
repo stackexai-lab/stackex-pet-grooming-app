@@ -305,7 +305,7 @@ function historyStyles(theme: Theme) {
       width: 32,
     },
     segmented: {
-      backgroundColor: '#ECECEB',
+      backgroundColor: t.colors.surfaceContainer,
       borderRadius: 18,
       flexDirection: 'row',
       gap: 6,
@@ -322,7 +322,7 @@ function historyStyles(theme: Theme) {
       paddingVertical: 10,
     },
     segmentActive: {
-      backgroundColor: '#F8F7F5',
+      backgroundColor: t.colors.surface,
     },
     segmentLabel: {
       color: t.colors.textSecondary,
@@ -361,13 +361,13 @@ function historyStyles(theme: Theme) {
       marginTop: 14,
     },
     petChip: {
-      backgroundColor: '#EFEDEB',
+      backgroundColor: t.colors.surfaceContainer,
       borderRadius: 999,
       paddingHorizontal: 12,
       paddingVertical: 8,
     },
     petChipActive: {
-      backgroundColor: '#F6E8D9',
+      backgroundColor: t.colors.primaryFixedSoft,
     },
     petChipLabel: {
       color: t.colors.textSecondary,
@@ -413,22 +413,22 @@ function historyStyles(theme: Theme) {
       lineHeight: 14,
     },
     card: {
-      backgroundColor: '#F7F6F4',
+      backgroundColor: t.colors.surface,
       borderRadius: 18,
       marginBottom: 14,
       paddingHorizontal: 12,
       paddingVertical: 12,
       borderWidth: 1,
-      borderColor: '#E9E5E1',
+      borderColor: t.colors.border,
     },
     pastCard: {
-      backgroundColor: '#F7F6F4',
+      backgroundColor: t.colors.surface,
       borderRadius: 18,
       marginBottom: 14,
       paddingHorizontal: 12,
       paddingVertical: 12,
       borderWidth: 1,
-      borderColor: '#E9E5E1',
+      borderColor: t.colors.border,
     },
     cardTop: {
       alignItems: 'center',
@@ -463,7 +463,7 @@ function historyStyles(theme: Theme) {
     },
     pendingPill: {
       alignItems: 'center',
-      backgroundColor: '#F8E2CF',
+      backgroundColor: t.colors.primaryFixed,
       borderRadius: 999,
       flexDirection: 'row',
       gap: 6,
@@ -472,7 +472,7 @@ function historyStyles(theme: Theme) {
     },
     completedPill: {
       alignItems: 'center',
-      backgroundColor: '#DDF1E8',
+      backgroundColor: t.colors.secondaryContainer,
       borderRadius: 999,
       flexDirection: 'row',
       gap: 6,
@@ -486,7 +486,7 @@ function historyStyles(theme: Theme) {
       width: 8,
     },
     pillDotDone: {
-      backgroundColor: '#64B38C',
+      backgroundColor: t.colors.success,
       borderRadius: 999,
       height: 8,
       width: 8,
@@ -498,7 +498,7 @@ function historyStyles(theme: Theme) {
       lineHeight: 14,
     },
     completedText: {
-      color: '#4B8B6A',
+      color: t.colors.onSecondaryContainer,
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: 11,
       lineHeight: 14,
@@ -544,8 +544,8 @@ function historyStyles(theme: Theme) {
     },
     tabBar: {
       alignItems: 'center',
-      backgroundColor: '#F9F8F7',
-      borderTopColor: '#E9E8E5',
+      backgroundColor: t.colors.surface,
+      borderTopColor: t.colors.border,
       borderTopWidth: 1,
       flexDirection: 'row',
       justifyContent: 'space-around',
