@@ -35,7 +35,7 @@ export function BookingHistoryScreen() {
           <Pressable style={styles.iconButton} onPress={() => router.back()}>
             <MaterialIcons color={theme.colors.ink} name={backIcon} size={20} />
           </Pressable>
-          <Text style={styles.title}>{t('history.title')}</Text>
+          <Text style={[styles.title, { textAlign: isRTL ? 'auto' : 'left' }]}>{t('history.title')}</Text>
           <HeaderBrand />
         </View>
 
@@ -46,16 +46,23 @@ export function BookingHistoryScreen() {
             onPress={() => setActiveTab('upcoming')}
             style={[styles.segment, activeTab === 'upcoming' && styles.segmentActive]}
           >
-            <Text style={[styles.segmentLabel, activeTab === 'upcoming' && styles.segmentLabelActive]}>Upcoming</Text>
-            <View style={styles.badge}><Text style={styles.badgeText}>{upcoming.length}</Text></View>
+            <Text style={[styles.segmentLabel, activeTab === 'upcoming' && styles.segmentLabelActive]}>
+              {t('history.upcoming')}
+            </Text>
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{upcoming.length}</Text>
+            </View>
           </Pressable>
+
           <Pressable
             accessibilityRole="tab"
             accessibilityState={{ selected: activeTab === 'past' }}
             onPress={() => setActiveTab('past')}
             style={[styles.segment, activeTab === 'past' && styles.segmentActive]}
           >
-            <Text style={[styles.segmentLabel, activeTab === 'past' && styles.segmentLabelActive]}>Past Visits</Text>
+            <Text style={[styles.segmentLabel, activeTab === 'past' && styles.segmentLabelActive]}>
+              {t('history.pastVisits')}
+            </Text>
             <Text style={styles.segmentCount}>{past.length}</Text>
           </Pressable>
         </View>
@@ -67,107 +74,179 @@ export function BookingHistoryScreen() {
             onPress={() => setSelectedPet('all')}
             style={[styles.petChip, selectedPet === 'all' && styles.petChipActive]}
           >
-            <Text style={[styles.petChipLabel, selectedPet === 'all' && styles.petChipLabelActive]}>All Pets</Text>
+            <Text style={[styles.petChipLabel, selectedPet === 'all' && styles.petChipLabelActive]}>
+              {t('history.allPets')}
+            </Text>
           </Pressable>
+
           <Pressable
             accessibilityRole="button"
             accessibilityState={{ selected: selectedPet === 'Max' }}
             onPress={() => setSelectedPet('Max')}
             style={[styles.petChip, selectedPet === 'Max' && styles.petChipActive]}
           >
-            <Text style={[styles.petChipLabel, selectedPet === 'Max' && styles.petChipLabelActive]}>Max</Text>
+            <Text style={[styles.petChipLabel, selectedPet === 'Max' && styles.petChipLabelActive]}>
+              Max
+            </Text>
           </Pressable>
+
           <Pressable
             accessibilityRole="button"
             accessibilityState={{ selected: selectedPet === 'Luna' }}
             onPress={() => setSelectedPet('Luna')}
             style={[styles.petChip, selectedPet === 'Luna' && styles.petChipActive]}
           >
-            <Text style={[styles.petChipLabel, selectedPet === 'Luna' && styles.petChipLabelActive]}>Luna</Text>
+            <Text style={[styles.petChipLabel, selectedPet === 'Luna' && styles.petChipLabelActive]}>
+              Luna
+            </Text>
           </Pressable>
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
           {activeTab === 'upcoming' ? (
             <>
               <View style={styles.sectionRow}>
-                <Text style={styles.sectionTitle}>Upcoming Visit</Text>
+                <Text style={styles.sectionTitle}>
+                  {t('history.upcomingVisit')}
+                </Text>
               </View>
 
               {upcoming.map((booking) => (
                 <View key={booking.id} style={styles.card}>
                   <View style={styles.cardTop}>
                     <View style={styles.petInfo}>
-                      <Image source={booking.photo} style={styles.photo} resizeMode="cover" />
+                      <Image
+                        source={booking.photo}
+                        style={styles.photo}
+                        resizeMode="cover"
+                      />
                       <View style={styles.petCopy}>
                         <Text style={styles.name}>{booking.petName}</Text>
                         <Text style={styles.breed}>{t(booking.breedKey)}</Text>
                       </View>
                     </View>
+
                     <View style={styles.pendingPill}>
                       <View style={styles.pillDot} />
-                      <Text style={styles.pendingText}>Pending</Text>
+                      <Text style={styles.pendingText}>
+                        {t('history.pending')}
+                      </Text>
                     </View>
                   </View>
 
                   <View style={styles.serviceRow}>
                     <Text style={styles.service}>{t(booking.serviceKey)}</Text>
-                    <Text style={styles.metaLabel}>${booking.price.toFixed(2)}</Text>
+                    <Text style={styles.metaLabel}>
+                      {t('confirmation.money', {
+                        value: booking.price.toFixed(2),
+                      })}
+                    </Text>
                   </View>
 
                   <View style={styles.infoLine}>
-                    <MaterialIcons color={theme.colors.textSecondary} name="event" size={16} />
-                    <Text style={styles.infoText}>Sat, Jun 20 · 2:30 PM · 75 min</Text>
+                    <MaterialIcons
+                      color={theme.colors.textSecondary}
+                      name="event"
+                      size={16}
+                    />
+                    <Text style={styles.infoText}>
+                      {t('history.upcomingDate')}
+                    </Text>
                   </View>
+
                   <View style={styles.infoLine}>
-                    <MaterialIcons color={theme.colors.textSecondary} name="place" size={16} />
-                    <Text style={styles.infoText}>Stylist: Sarah M. • Downtown Studio</Text>
+                    <MaterialIcons
+                      color={theme.colors.textSecondary}
+                      name="place"
+                      size={16}
+                    />
+                    <Text style={styles.infoText}>
+                      {t('history.upcomingStylist')}
+                    </Text>
                   </View>
                 </View>
               ))}
-              {upcoming.length === 0 && <Text style={styles.emptyText}>No upcoming visits for this pet.</Text>}
+
+              {upcoming.length === 0 && (
+                <Text style={styles.emptyText}>
+                  {t('history.noUpcomingForPet')}
+                </Text>
+              )}
             </>
           ) : (
             <>
               <View style={styles.sectionRow}>
-                <Text style={styles.sectionTitle}>Past Visits</Text>
+                <Text style={styles.sectionTitle}>
+                  {t('history.pastVisits')}
+                </Text>
               </View>
 
               {past.map((booking) => (
                 <View key={booking.id} style={styles.pastCard}>
                   <View style={styles.cardTop}>
                     <View style={styles.petInfo}>
-                      <Image source={booking.photo} style={styles.photo} resizeMode="cover" />
+                      <Image
+                        source={booking.photo}
+                        style={styles.photo}
+                        resizeMode="cover"
+                      />
                       <View style={styles.petCopy}>
                         <Text style={styles.name}>{booking.petName}</Text>
                         <Text style={styles.breed}>{t(booking.breedKey)}</Text>
                       </View>
                     </View>
+
                     <View style={styles.completedPill}>
                       <View style={styles.pillDotDone} />
-                      <Text style={styles.completedText}>Completed</Text>
+                      <Text style={styles.completedText}>
+                        {t('history.completed')}
+                      </Text>
                     </View>
                   </View>
 
                   <View style={styles.serviceRow}>
                     <Text style={styles.service}>{t(booking.serviceKey)}</Text>
-                    <Text style={styles.metaLabel}>${booking.price.toFixed(2)}</Text>
+                    <Text style={styles.metaLabel}>
+                      {t('confirmation.money', {
+                        value: booking.price.toFixed(2),
+                      })}
+                    </Text>
                   </View>
 
                   <View style={styles.infoLine}>
-                    <MaterialIcons color={theme.colors.textSecondary} name="event" size={16} />
-                    <Text style={styles.infoText}>Sun, Jun 12 · 11:00 AM · 45 min</Text>
+                    <MaterialIcons
+                      color={theme.colors.textSecondary}
+                      name="event"
+                      size={16}
+                    />
+                    <Text style={styles.infoText}>
+                      {t('history.pastDate')}
+                    </Text>
                   </View>
+
                   <View style={styles.infoLine}>
-                    <MaterialIcons color={theme.colors.textSecondary} name="place" size={16} />
-                    <Text style={styles.infoText}>Stylist: David K.</Text>
+                    <MaterialIcons
+                      color={theme.colors.textSecondary}
+                      name="place"
+                      size={16}
+                    />
+                    <Text style={styles.infoText}>
+                      {t('history.pastStylist')}
+                    </Text>
                   </View>
                 </View>
               ))}
-              {past.length === 0 && <Text style={styles.emptyText}>No past visits for this pet.</Text>}
+
+              {past.length === 0 && (
+                <Text style={styles.emptyText}>
+                  {t('history.noPastForPet')}
+                </Text>
+              )}
             </>
           )}
-
         </ScrollView>
 
         <BottomTabBar active="bookings" insetBottom={insets.bottom} />
@@ -211,10 +290,11 @@ function historyStyles(theme: Theme) {
     },
     title: {
       color: t.colors.ink,
+      flex: 1,
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: 18,
       lineHeight: 24,
-      textAlign: 'center',
+      marginHorizontal: 10,
     },
     profileButton: {
       alignItems: 'center',
@@ -237,6 +317,7 @@ function historyStyles(theme: Theme) {
       borderRadius: 14,
       flex: 1,
       flexDirection: 'row',
+      gap: 6,
       justifyContent: 'center',
       paddingVertical: 10,
     },
@@ -258,7 +339,6 @@ function historyStyles(theme: Theme) {
       borderRadius: 999,
       height: 18,
       justifyContent: 'center',
-      marginLeft: 6,
       minWidth: 18,
       paddingHorizontal: 4,
     },
@@ -273,7 +353,6 @@ function historyStyles(theme: Theme) {
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: 12,
       lineHeight: 16,
-      marginLeft: 6,
     },
     petFilterRow: {
       flexDirection: 'row',
@@ -367,7 +446,7 @@ function historyStyles(theme: Theme) {
       width: 42,
     },
     petCopy: {
-      marginLeft: 10,
+      marginStart: 10,
     },
     name: {
       color: t.colors.ink,

@@ -35,7 +35,7 @@ export function PaymentScreen() {
 
   return (
     <View style={styles.screen}>
-      <FlowHeader elevatedBack insetTop={insets.top} title={t('payment.title')} />
+      <FlowHeader elevatedBack fitTitle insetTop={insets.top} title={t('payment.title')} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <ScrollView
           contentContainerStyle={styles.content}
