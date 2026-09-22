@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { I18nManager, Pressable, Text, View } from 'react-native';
+import { I18nManager, Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,10 @@ export function SuccessScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
+  const isWideScreen = width >= 768;
+  const isCompactScreen = width <= 375 && height <= 667;
+  const ContentContainer = isCompactScreen ? ScrollView : View;
   const { theme } = useTheme();
   const styles = useMemo(() => successStyles(theme), [theme]);
   const forward = I18nManager.isRTL ? 'arrow-back' : 'arrow-forward';
@@ -29,20 +33,23 @@ export function SuccessScreen() {
         },
       ]}
     >
-      <View style={styles.content}>
+      <ContentContainer
+        style={[styles.content, isCompactScreen && { flex: 1 }]}
+        {...(isCompactScreen ? { showsVerticalScrollIndicator: false } : {})}
+      >
         <View style={styles.hero}>
-          <View style={styles.badgeWrap}>
+          <View style={[styles.badgeWrap, isWideScreen && { height: 180, width: 210 }]}>
             <View style={styles.glowDotOne} />
             <View style={styles.glowDotTwo} />
             <View style={styles.glowDotThree} />
             <View style={styles.glowDotFour} />
 
-            <View style={styles.badgeRing}>
-              <View style={styles.badge}>
+            <View style={[styles.badgeRing, isWideScreen && { height: 156, width: 156 }]}>
+              <View style={[styles.badge, isWideScreen && { height: 116, width: 116 }]}>
                 <MaterialIcons
                   color={theme.colors.primaryText}
                   name="check"
-                  size={34}
+                  size={isWideScreen ? 46 : 34}
                 />
               </View>
             </View>
@@ -169,7 +176,7 @@ export function SuccessScreen() {
             <Text style={styles.homeLabel}>{t('success.backHome')}</Text>
           </Pressable>
         </View>
-      </View>
+      </ContentContainer>
     </View>
   );
 }

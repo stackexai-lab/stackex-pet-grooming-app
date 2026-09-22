@@ -13,7 +13,7 @@ const ar: Localized<typeof en> = {
   done: 'تم',
   error: 'حدث خطأ ما',
   languages: 'اللغات',
-  appName: 'PawCare',
+  appName: 'باو كير',
   home: {
     greetingMorning: 'صباح الخير، {{name}}',
     greetingAfternoon: 'طاب يومك، {{name}}',

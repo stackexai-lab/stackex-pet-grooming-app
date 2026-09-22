@@ -284,7 +284,7 @@ function profileStyles(theme: Theme) {
     },
     modalPrimary: {
       alignItems: 'center',
-      backgroundColor: t.colors.primary,
+      backgroundColor: t.colors.primaryContainer,
       borderRadius: t.radii.button,
       flex: 1,
       justifyContent: 'center',

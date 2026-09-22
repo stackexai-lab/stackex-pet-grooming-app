@@ -205,7 +205,7 @@ function confirmationStyles(theme: Theme) {
     },
     pay: {
       alignItems: 'center',
-      backgroundColor: t.colors.primary,
+      backgroundColor: t.colors.primaryContainer,
       borderRadius: t.radii.button,
       flexDirection: 'row',
       gap: t.spacing.sm,

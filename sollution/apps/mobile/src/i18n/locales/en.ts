@@ -122,7 +122,7 @@ heroSubtitle: 'Gentle grooming  and care you can trust.',
     continue: 'Continue to confirmation',
   },
   confirmation: {
-    title: 'Booking Confirmation',
+    title: 'Confirmation',
     headline: 'You’re almost there!',
     subtitle: 'Review your booking details before we secure your spot.',
     vipGuest: 'VIP Guest',

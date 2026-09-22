@@ -423,7 +423,7 @@ function scheduleStyles(theme: Theme) {
     },
     modalPrimary: {
       alignItems: 'center',
-      backgroundColor: t.colors.primary,
+      backgroundColor: t.colors.primaryContainer,
       borderRadius: t.radii.button,
       flex: 1,
       justifyContent: 'center',
@@ -442,7 +442,7 @@ function scheduleStyles(theme: Theme) {
     },
     continue: {
       alignItems: 'center',
-      backgroundColor: t.colors.primary,
+      backgroundColor: t.colors.primaryContainer,
       borderRadius: t.radii.button,
       elevation: 3,
       flexDirection: 'row',

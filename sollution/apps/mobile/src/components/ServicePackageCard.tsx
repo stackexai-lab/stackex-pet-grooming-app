@@ -97,9 +97,9 @@ function packageStyles(theme: Theme) {
       opacity: 0.94,
     },
     media: {
-      height: t.spacing.media,
-      width: '100%',
-    },
+  aspectRatio: 1.6,
+  width: '100%',
+},
     photo: {
       height: '100%',
       width: '100%',

@@ -549,7 +549,6 @@ function detailsStyles(theme: Theme) {
       borderRadius: t.radii.hero,
       elevation: 16,
       gap: t.spacing.sm,
-      maxWidth: 420,
       paddingBottom: t.spacing.md,
       paddingHorizontal: t.spacing.md,
       paddingTop: t.spacing.sm,
