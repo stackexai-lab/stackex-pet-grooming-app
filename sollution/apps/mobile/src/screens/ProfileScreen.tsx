@@ -6,18 +6,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '@/components/AppHeader';
 import { BottomTabBar } from '@/components/BottomTabBar';
-import { createStyles, paletteIds, useTheme, type Theme } from '@/theme';
+import { createStyles, variations, useTheme, type Theme } from '@/theme';
 import { useLanguage } from '@/i18n';
 
 export function ProfileScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { theme, setPaletteId } = useTheme();
+  const { theme, setPaletteId, setVariation } = useTheme();
   const { locale, setLocale } = useLanguage();
   const styles = useMemo(() => profileStyles(theme), [theme]);
   const [address, setAddress] = useState(t('profilePage.address'));
   const [draftAddress, setDraftAddress] = useState(address);
-  const [modal, setModal] = useState<'address' | 'theme' | 'language' | null>(null);
+  const [modal, setModal] = useState<'address' | 'theme' | 'variation' | 'language' | null>(null);
 
   const openAddressEditor = () => {
     setDraftAddress(address);
@@ -32,8 +32,17 @@ export function ProfileScreen() {
   const paletteNames = {
     sage: 'Sage',
     'minimalist-mist': 'Minimalist Mist',
+    apricot: 'Apricot',
+    parrot: 'Parrot Green',
   };
+  const variationNames = {
+    premium: t('profilePage.premiumVariation'),
+    dark: t('profilePage.darkVariation'),
+  };
+  const activeVariation = variations[theme.variation as keyof typeof variations];
+  const availablePaletteIds = Object.keys(activeVariation.palettes) as Array<keyof typeof paletteNames>;
   const selectedTheme = paletteNames[theme.paletteId];
+  const selectedVariation = variationNames[theme.variation as keyof typeof variationNames];
 
   return (
     <View style={styles.screen}>
@@ -65,6 +74,14 @@ export function ProfileScreen() {
 
         <Text style={styles.sectionLabel}>{t('profilePage.preferences')}</Text>
         <View style={styles.group}>
+          <Pressable accessibilityRole="button" onPress={() => setModal('variation')} style={styles.preferenceRow}>
+            <View>
+              <Text style={styles.label}>{t('profilePage.variation')}</Text>
+              <Text style={styles.value}>{selectedVariation}</Text>
+            </View>
+            <MaterialIcons color={theme.colors.ink} name="chevron-right" size={20} />
+          </Pressable>
+          <View style={styles.divider} />
           <Pressable accessibilityRole="button" onPress={() => setModal('theme')} style={styles.preferenceRow}>
             <View>
               <Text style={styles.label}>{t('profilePage.theme')}</Text>
@@ -111,7 +128,7 @@ export function ProfileScreen() {
             ) : modal === 'theme' ? (
               <>
                 <Text style={styles.modalTitle}>{t('profilePage.chooseTheme')}</Text>
-                {paletteIds.map((paletteId) => (
+                {availablePaletteIds.map((paletteId) => (
                   <Pressable
                     key={paletteId}
                     accessibilityRole="radio"
@@ -121,6 +138,22 @@ export function ProfileScreen() {
                   >
                     <Text style={styles.optionLabel}>{paletteNames[paletteId]}</Text>
                     {theme.paletteId === paletteId && <MaterialIcons color={theme.colors.primary} name="check" size={20} />}
+                  </Pressable>
+                ))}
+              </>
+            ) : modal === 'variation' ? (
+              <>
+                <Text style={styles.modalTitle}>{t('profilePage.chooseVariation')}</Text>
+                {(Object.keys(variations) as Array<keyof typeof variations>).map((variationId) => (
+                  <Pressable
+                    key={variationId}
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: theme.variation === variationId }}
+                    onPress={() => { setVariation(variationId); setModal(null); }}
+                    style={[styles.optionRow, theme.variation === variationId && styles.selectedPalette]}
+                  >
+                    <Text style={styles.optionLabel}>{variationNames[variationId]}</Text>
+                    {theme.variation === variationId && <MaterialIcons color={theme.colors.primary} name="check" size={20} />}
                   </Pressable>
                 ))}
               </>

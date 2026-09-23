@@ -7,6 +7,7 @@ export type PaletteColors = {
   textMuted: string;
   border: string;
   primary: string;
+  primaryHover?: string;
   primaryText: string;
   success: string;
   warning: string;
@@ -14,9 +15,11 @@ export type PaletteColors = {
 };
 
 export const paletteIds = ['sage', 'minimalist-mist'] as const;
-export type PaletteId = (typeof paletteIds)[number];
+export type PremiumPaletteId = (typeof paletteIds)[number];
+export type PaletteId = PremiumPaletteId | 'apricot';
+export type PaletteDefinition = Partial<PaletteColors>;
 
-export const palettes: Record<PaletteId, PaletteColors> = {
+export const palettes: Record<PremiumPaletteId, PaletteColors> = {
   sage: {
     background: '#F7F9F5',
     surface: '#FFFFFF',
@@ -36,6 +39,15 @@ export const palettes: Record<PaletteId, PaletteColors> = {
   },
 };
 
+export const apricotPalette: PaletteDefinition = {
+  primary: '#f4a261',
+  primaryHover: '#e79352',
+  primaryText: '#1a1008',
+  success: '#4eba87',
+  warning: '#e0a96d',
+  error: '#BA1A1A',
+};
+
 export function isPaletteId(value: string): value is PaletteId {
-  return Object.prototype.hasOwnProperty.call(palettes, value);
+  return value === 'apricot' || Object.prototype.hasOwnProperty.call(palettes, value);
 }

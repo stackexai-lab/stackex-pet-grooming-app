@@ -301,7 +301,7 @@ function scheduleStyles(theme: Theme) {
       opacity: 0.4,
     },
     calendarDaySelectedLabel: {
-      color: t.colors.primary,
+      color: t.colors.primaryLight,
       fontFamily: t.typography.fontFamilies.bodyBold,
     },
     timeCard: {

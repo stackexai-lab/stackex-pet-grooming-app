@@ -5,6 +5,15 @@ export const fontFamilies = {
   display: 'Manrope_700Bold',
 } as const;
 
+export type ThemeTypography = {
+  fontFamilies: Record<keyof typeof fontFamilies, string>;
+  sizes: typeof typography.sizes;
+  weights: typeof typography.weights;
+  lineHeights: typeof typography.lineHeights;
+  headingWeight: number;
+  buttonWeight: number;
+};
+
 export const typography = {
   fontFamilies,
   sizes: {
@@ -23,6 +32,8 @@ export const typography = {
     medium: '500' as const,
     bold: '700' as const,
   },
+  headingWeight: 700,
+  buttonWeight: 700,
   lineHeights: {
     overline: 14,
     caption: 18,
@@ -34,3 +45,17 @@ export const typography = {
     display: 38,
   },
 } as const;
+
+export const darkFontFamilies = {
+  body: 'PlusJakartaSans_400Regular',
+  bodyMedium: 'PlusJakartaSans_500Medium',
+  bodyBold: 'PlusJakartaSans_800ExtraBold',
+  display: 'PlusJakartaSans_700Bold',
+} as const;
+
+export const darkTypography: ThemeTypography = {
+  ...typography,
+  fontFamilies: darkFontFamilies,
+  headingWeight: 800,
+  buttonWeight: 700,
+};

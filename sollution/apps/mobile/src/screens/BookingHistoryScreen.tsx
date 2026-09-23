@@ -492,7 +492,7 @@ function historyStyles(theme: Theme) {
       width: 8,
     },
     pendingText: {
-      color: t.colors.primary,
+      color: t.colors.onPrimaryFixedVariant,
       fontFamily: t.typography.fontFamilies.bodyMedium,
       fontSize: 11,
       lineHeight: 14,
