@@ -1,7 +1,6 @@
-import { Image, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { homeImages } from '@/mocks/home';
 import { useTheme } from '@/theme';
 
 export function HeaderBrand() {
@@ -13,7 +12,6 @@ export function HeaderBrand() {
       <Text style={{ color: theme.colors.ink, fontFamily: theme.typography.fontFamilies.bodyMedium, fontSize: theme.typography.sizes.heading }}>
         {t('appName')}
       </Text>
-      <Image source={homeImages.logo} style={{ height: 32, width: 40 }} resizeMode="contain" />
     </View>
   );
 }

@@ -12,7 +12,7 @@ export type PopularService = {
 };
 
 export const homeImages = {
-  logo: require('../../assets/images/pawcare-logo.png') as ImageSourcePropType,
+  logo: require('../../assets/icon.png') as ImageSourcePropType,
   pet: require('../../assets/images/golden-retriever.jpg') as ImageSourcePropType,
   heroes: [
     require('../../assets/images/golden-retriever.jpg') as ImageSourcePropType,
