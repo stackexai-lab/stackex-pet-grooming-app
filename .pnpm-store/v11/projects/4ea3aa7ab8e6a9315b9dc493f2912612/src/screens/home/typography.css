@@ -1,0 +1,175 @@
+/* DineOS hierarchy through Premium theme tokens. Layout remains in home.css. */
+.home-app, .modal {
+  --home-text-small: var(--theme-text-caption);
+  --home-text-detail: var(--theme-text-body);
+  --home-text-name: var(--theme-text-body-large);
+  --home-text-heading: var(--theme-text-title);
+  --home-text-price: var(--theme-text-title);
+  font-family: var(--theme-font-body);
+  font-size: var(--home-text-detail);
+  font-weight: var(--theme-weight-regular);
+  line-height: 1.6;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.home-app h1 {
+  font-size: var(--theme-text-display);
+  font-weight: var(--theme-weight-heading);
+  line-height: 1.25;
+  letter-spacing: -.025em;
+}
+.section-heading h2, .modal-heading h2 {
+  font-size: var(--home-text-heading);
+  font-weight: var(--theme-weight-heading);
+  line-height: 1.25;
+  letter-spacing: -.025em;
+}
+.section-heading h2 { font-size: var(--theme-text-card); }
+.service-description h2, .pet-name, .add-pet-card strong,
+.empty-cart h3, .modal-content h3, .mobile-pet-switch strong {
+  font-size: var(--home-text-name);
+  font-weight: var(--theme-weight-heading);
+  line-height: 1.375;
+  letter-spacing: 0;
+  overflow-wrap: break-word;
+}
+.service-description h2, .modal-content h3 {
+  font-family: var(--theme-font-display);
+  font-weight: var(--theme-weight-extra-bold);
+  line-height: 1.2;
+  letter-spacing: -.03em;
+}
+.service-description h2 { font-size: clamp(1.05rem, 1.4vw, 1.35rem); }
+.modal-content h3 { font-size: clamp(1.2rem, 1.8vw, 1.7rem); }
+.pet-name, .add-pet-card strong, .empty-cart h3, .mobile-pet-switch strong {
+  font-family: var(--theme-font-body);
+}
+.add-pet-card strong { font-size: var(--theme-text-body); }
+.service-description p, .modal-content > p, .included-list,
+.review-items, .profile-summary p {
+  font-size: var(--home-text-detail);
+  font-weight: var(--theme-weight-regular);
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--theme-ink) 82%, var(--theme-text-secondary));
+}
+.pet-breed, .pet-facts, .pet-note, .pet-vaccination,
+.add-pet-card small, .service-tags span, .service-price small,
+.booking-item p, .booking-item-footer small, .booking-item-footer button,
+.cost-breakdown, .booking-total small, .extra-options small,
+.extras-heading small, .service-modal-footer > small, .checkout-pet small,
+.mobile-cart-bar small, .mobile-pet-switch small, .mobile-pet-switch > span,
+.profile-copy small, .count-badge, .language-control select {
+  font-size: var(--home-text-small);
+  font-weight: var(--theme-weight-medium);
+  line-height: 1.375;
+  color: var(--theme-text-secondary);
+}
+.pet-facts strong, .profile-copy strong, .booking-item-title h3,
+.booking-total > div > strong, .pet-form label, .extra-options strong,
+.checkout-pet strong {
+  font-size: inherit;
+  font-weight: var(--theme-weight-bold);
+  line-height: 1.375;
+}
+.profile-copy strong, .booking-item-title h3, .booking-total > div > strong,
+.pet-form label { font-size: var(--theme-text-body-large); }
+.booking-item-title h3 { font-size: var(--theme-text-body); }
+.booking-item-title h3 { overflow-wrap: break-word; }
+.booking-heading h2 {
+  font-size: var(--theme-text-label);
+  font-weight: var(--theme-weight-extra-bold);
+  line-height: 1.375;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.pet-tag, .items-badge {
+  font-size: var(--theme-text-label);
+  font-weight: var(--theme-weight-extra-bold);
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.service-price strong, .total-price, .modal-service-meta strong,
+.mobile-cart-bar strong {
+  font-family: var(--theme-font-display);
+  font-size: clamp(1.08rem, 1.5vw, 1.4rem);
+  font-weight: var(--theme-weight-heading);
+  color: var(--theme-ink);
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1.1;
+  letter-spacing: -.025em;
+  /* Wrap between amount and currency if needed, never inside a number. */
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.service-price bdi, .total-price bdi { white-space: normal; }
+.booking-item-title > strong, .cost-breakdown dd, .review-items dd,
+.extra-options bdi, .service-modal-footer bdi {
+  font-size: var(--home-text-detail);
+  font-weight: var(--theme-weight-bold);
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0;
+}
+.button {
+  font-family: var(--theme-font-body);
+  font-size: var(--theme-text-button);
+  font-weight: var(--theme-weight-button);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.text-action, .details-action {
+  font-size: var(--home-text-small);
+  font-weight: var(--theme-weight-medium);
+  line-height: 1.5;
+}
+.draft-button { font-size: var(--theme-text-button); font-weight: var(--theme-weight-button); }
+.total-price, .modal-service-meta strong { font-size: var(--theme-text-display); }
+.booking-item-title > strong { font-family: var(--theme-font-display); }
+.brand-lockup strong {
+  font-size: var(--home-text-name);
+  font-weight: var(--theme-weight-heading);
+  line-height: 1.3;
+  letter-spacing: -.02em;
+}
+.brand-lockup small {
+  font-size: var(--theme-text-label);
+  font-weight: var(--theme-weight-extra-bold);
+  line-height: 1.5;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.pet-breed, .pet-facts, .pet-note, .add-pet-card small,
+.booking-item p, .booking-item-footer small, .booking-total small,
+.extra-options small, .extras-heading small, .muted-copy {
+  color: color-mix(in srgb, var(--theme-ink) 78%, var(--theme-text-secondary));
+}
+.pet-note--sensitive { color: var(--theme-error); }
+.pet-vaccination { color: var(--theme-text-secondary); }
+.pet-form input, .pet-form select {
+  font-size: var(--theme-text-body);
+  font-weight: var(--theme-weight-regular);
+  line-height: 1.5;
+}
+.modal-content { font-size: var(--home-text-detail); }
+.toast { font-size: var(--theme-text-caption); line-height: 1.6; }
+.empty-cart p { font-size: var(--home-text-detail); line-height: 1.5; }
+
+/* The same scale and font stack cover both scripts. Arabic keeps natural
+   joining and extra leading for diacritics, rather than spaced-out letters. */
+:is(.home-app, .modal):lang(ar) { line-height: 1.8; }
+:is(.home-app, .modal):lang(ar) :is(h1, h2, h3, .pet-name, .brand-lockup strong,
+  .brand-lockup small, .booking-heading h2, .pet-tag, .items-badge,
+  .service-price strong, .total-price, .button) { letter-spacing: 0; }
+:is(.home-app, .modal):lang(ar) :is(.service-description h2, .pet-name,
+  .modal-heading h2, .modal-content h3, .booking-item-title h3) { line-height: 1.65; }
+:is(.home-app, .modal):lang(ar) :is(.service-description p, .pet-breed,
+  .pet-facts, .pet-note, .booking-item p, .extra-options small) { line-height: 1.8; }
+
+@media (max-width: 1100px) {
+  .service-price strong { font-size: calc((var(--theme-text-card) + var(--theme-text-title)) / 2); }
+}
+@media (max-width: 640px) {
+  .service-price strong { font-size: var(--theme-text-card); }
+}
